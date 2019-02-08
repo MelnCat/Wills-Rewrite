@@ -4,6 +4,8 @@ module.exports = class Command {
 	constructor(name, description) {
 		this.name = name;
 		this.description = description;
+		this.aliases = [];
+		this.shortcuts = [];
 	}
 	setFunction(exec) {
 		this.exec = exec;

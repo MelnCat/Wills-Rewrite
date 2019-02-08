@@ -20,7 +20,7 @@ Sequelize.SNOWFLAKE = Sequelize.CHAR(18);
 exports.sequelize = sequelize;
 exports.Sequelize = sequelize;
 exports.models = {
-	guildinfo: sequelize.define("guildinfo", {
+	guildinfo: sequelize.define("guildinfos", {
 		id: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false,
@@ -29,6 +29,13 @@ exports.models = {
 		prefix: {
 			type: Sequelize.TEXT,
 			defaultValue: prefix
+		},
+	}),
+	blacklist: sequelize.define("blacklists", {
+		id: {
+			type: Sequelize.SNOWFLAKE,
+			allowNull: false,
+			primaryKey: true
 		},
 	})
 };
