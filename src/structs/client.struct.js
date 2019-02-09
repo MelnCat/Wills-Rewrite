@@ -35,14 +35,27 @@ module.exports = class DiscordDonuts extends Client {
 	}
 	createTicket(order) {
 		const guild = this.channels.get(order.channel).guild;
-		return new MessageEmbed
+		return new MessageEmbed()
 			.setTitle("New Ticket!")
 			.setDescription("A new order is here!")
 			.addField("🆔 ID", `\`${order.id}\``)
 			.addField("📄 Description", order.description)
 			.addField("ℹ Details", `**Customer**: ${this.users.get(order.user).tag} (${order.user})
-Channel: #${this.channels.get(order.channel).name} (${order.channel})
-Guild: ${guild.name} (${guild.id})
+**Channel**: #${this.channels.get(order.channel).name} (${order.channel})
+**Guild**: ${guild.name} (${guild.id})
+`)
+			.addField("💻 Status", this.status(order));
+	}
+	customTicket(order, text = "No text specified.") {
+		const guild = this.channels.get(order.channel).guild;
+		return new MessageEmbed()
+			.setTitle("Ticket")
+			.setDescription(text)
+			.addField("🆔 ID", `\`${order.id}\``)
+			.addField("📄 Description", order.description)
+			.addField("ℹ Details", `**Customer**: ${this.users.get(order.user).tag} (${order.user})
+**Channel**: #${this.channels.get(order.channel).name} (${order.channel})
+**Guild**: ${guild.name} (${guild.id})
 `)
 			.addField("💻 Status", this.status(order));
 	}

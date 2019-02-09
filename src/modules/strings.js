@@ -7,6 +7,7 @@ module.exports = {
 		ordered: "🖥 You already have an order!",
 		dms: "✉ I was unable to DM you. Please try enabling DMs.",
 		expired: "⌛ Sorry, your order expired. Please try ordering another.",
+		nonexistent: "❎ You currently do not have an order. Order one!",
 	},
 	prefix: "d!!",
 	permissions: ["EVERYONE", "SERVER MODERATOR", "DONUT ADMIN", "BOT MANAGER"],

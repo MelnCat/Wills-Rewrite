@@ -3,6 +3,7 @@ const client = new Client(2);
 const Discord = require("discord.js");
 const chalk = require("chalk");
 const strings = client.getModule("strings");
+const { Op } = require("./modules/sql");
 const { models: { guildinfo, blacklist, orders }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
 const { errors } = strings;
 Object.defineProperty(Error.prototype, "short", {
@@ -35,6 +36,8 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 	client.emit("message", newMessage);
 });
 client.on("message", async message => {
+	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
+	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	const now = process.hrtime.bigint();
 	if (message.author.bot) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
@@ -47,7 +50,9 @@ client.on("message", async message => {
 	const command = args.shift();
 	if (!client.getCommand(command)) return;
 	try {
-		await client.getCommand(command).exec(client, message, args, now);
+		const gcommand = await client.getCommand(command);
+		if (!client.getModule("permissions")[gcommand.permissions](client, message.member)) return message.channel.send(client.errors.permissions);
+		await gcommand.exec(client, message, args, now);
 	} catch (err) {
 		await message.channel.send(`${errors.internal}
 \`\`\`js
@@ -62,20 +67,31 @@ ${err.stack}
 */
 orders.afterCreate(async(order, options) => {
 	await client.users.get(order.user).send("Thank you for ordering a donut. Your order was sent to our cooks.");
+	order.expireFinish = Date.now() + client.strings.times.expire;
+	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
+	await order.update({ message: tm });
+});
+orders.beforeDestroy(async(order, options) => {
+	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
 });
 orders.beforeUpdate(async(order, options) => {
+	if (!options.fields.includes("status")) return;
 	if (!client.users.get(order.user)) return order.destroy();
 	if (!client.channels.get(order.channel)) return order.destroy();
-	if (order.message && !client.mainChannels.ticket.messages.fetch(order.message)) return order.destroy();
+	if (order.status < 4 && order.message && !client.mainChannels.ticket.messages.fetch(order.message)) return order.destroy();
 	switch (order.status) {
-		case 0: {
-			order.expireFinish = Date.now() + client.strings.times.expire;
-			await client.mainChannels.ticket.send(client.createTicket(order));
-			break;
-		}
 		case 6: {
 			await client.users.get(order.user).send(client.errors.expired);
 		}
+	}
+	if (order.status > 3) {
+		if (await client.mainChannels.ticket.messages.fetch(order.message)) {
+			const tm = await client.mainChannels.ticket.messages.fetch(order.message);
+			await tm.delete();
+		}
+	} else {
+		const tm = await client.mainChannels.ticket.messages.fetch(order.message);
+		tm.edit(client.createTicket(order));
 	}
 });
 process.on("unhandledRejection", (err, p) => {
