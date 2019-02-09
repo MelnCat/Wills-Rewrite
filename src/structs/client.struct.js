@@ -11,20 +11,45 @@ module.exports = class DiscordDonuts extends Client {
 		super({ disableEveryone: true, shardCount: shards });
 		this.commands = new Collection();
 		this.loadCommands();
-		this.mainChannels = {};
 		this.strings = this.getModule("strings");
 		this.utils = this.getModule("utils");
 		this.auth = require("../auth");
+		this.status = 0;
 		this.errors = this.strings.errors;
+		this.statuses = ["with donuts."];
 		this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000);
+		this.statusInterval = setInterval(() => {
+			if (!this.user.presence.activity) return;
+			if (this.status && this.user.presence.activity.name !== this.strings.cstatus[this.status]) this.user.setActivity(this.strings.cstatus[this.status]);
+			if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
+		}, 10000);
 		this.util = Util;
 		this.loadChannels();
+		this.loadRoles();
+	}
+	loadRoles() {
+		this.mainRoles = {};
+		this.on("ready", async() => {
+			for (const [name, role] of Object.entries(this.strings.roles)) {
+				const r = this.mainGuild.roles.get(role);
+				if (!r) {
+					this.error(`Role ${chalk.blue(name)} was not found.`);
+					continue;
+				}
+				this.mainRoles[name] = r;
+				this.log(`Role ${chalk.cyan(name)} was loaded!`);
+			}
+		});
 	}
 	loadChannels() {
+		this.mainChannels = {};
 		this.on("ready", async() => {
 			for (const [name, channel] of Object.entries(this.strings.channels)) {
 				const chan = this.channels.get(channel);
-				if (!chan) this.error(`Channel ${chalk.magenta(name)} was not found.`);
+				if (!chan) {
+					this.error(`Channel ${chalk.magenta(name)} was not found.`);
+					continue;
+				}
 				this.mainChannels[name] = chan;
 				this.log(`Channel ${chalk.green(name)} was loaded!`);
 			}

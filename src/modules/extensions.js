@@ -22,4 +22,7 @@ String.prototype.replaceLast = function replaceLast(search, replacement) {
 String.prototype.random = function random() {
 	return this[Math.randint(this.length)];
 };
+String.prototype.equalsAny = function equalsAny(...strings) {
+	return strings.includes(this.valueOf());
+};
 module.exports = "Ok!";

@@ -1,6 +1,6 @@
 const Command = require("../../structs/command.struct");
 
-module.exports = new Command("eval", "Eval javascript code.", 3)
+module.exports = new Command("eval", "Eval javascript code.", 4)
 	.setFunction(async(client, message, args) => {
 		try {
 			let toEval = args.join(" ");

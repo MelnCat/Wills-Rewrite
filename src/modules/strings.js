@@ -10,10 +10,15 @@ module.exports = {
 		nonexistent: "❎ You currently do not have an order. Order one!",
 	},
 	prefix: "d!!",
-	permissions: ["EVERYONE", "SERVER MODERATOR", "DONUT ADMIN", "BOT MANAGER"],
+	permissions: ["EVERYONE", "SERVER MODERATOR", "EMPLOYEE", "DONUT ADMIN", "BOT MANAGER"],
 	times: { deliver: 540000, expire: 1200000 },
 	status: ["Unclaimed", "Claimed", "Cooking", "Cooked", "Delivered", "Deleted", "Expired", "Cancelled"],
+	cstatus: ["OK", "Database Error.", "Internal Error."],
 	channels: {
 		ticket: "543614876057337866"
+	},
+	roles: {
+		employee: "543842827977621541",
+		// TODO - absent: "543842827977621542"
 	}
 };

@@ -42,3 +42,10 @@ exports.checkOrders = async() => {
 		await order.update({ status: 4 });
 	}
 };
+exports.chunk = (array = [], size = 3) => {
+	const res = [];
+	for (let [i, j] = [0, array.length]; i < j; i += size) {
+		res.push(array.slice(i, i + size));
+	}
+	return res;
+};

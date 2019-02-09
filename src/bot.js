@@ -18,6 +18,7 @@ Object.defineProperty(Error.prototype, "shortcolors", {
 });
 client.log("Starting bot...");
 client.on("ready", async() => {
+	client.user.setActivity("Just started! Order donuts!");
 	client.getModule("extensions");
 	const authenErr = await sequelize.authenticate();
 	if (authenErr) client.error(`${chalk.yellow("Database")} failed to load. ${chalk.red(authenErr)}`);
@@ -51,7 +52,7 @@ client.on("message", async message => {
 	if (!client.getCommand(command)) return;
 	try {
 		const gcommand = await client.getCommand(command);
-		if (!client.getModule("permissions")[gcommand.permissions](client, message.member)) return message.channel.send(client.errors.permissions);
+		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args, now);
 	} catch (err) {
 		await message.channel.send(`${errors.internal}
@@ -95,6 +96,11 @@ orders.beforeUpdate(async(order, options) => {
 	}
 });
 process.on("unhandledRejection", (err, p) => {
+	if (!err.name.equalsAny) client.getModule("extensions");
+	if (err.name.equalsAny("TimeoutError", "SequelizeConnectionError")) {
+		client.status = 1;
+		return client.error(`Database failed to load.`);
+	}
 	client.error(err.stack);
 });
 
