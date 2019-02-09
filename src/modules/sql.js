@@ -37,6 +37,60 @@ exports.models = {
 			allowNull: false,
 			primaryKey: true
 		},
-	})
+	}),
+	orders: sequelize.define("orders", {
+		id: {
+			type: Sequelize.CHAR(255),
+			allowNull: false,
+			primaryKey: true
+		},
+		user: {
+			type: Sequelize.SNOWFLAKE,
+			allowNull: false
+		},
+		description: {
+			type: Sequelize.TEXT,
+			validate: {
+				not: /^\s*$/
+			}
+		},
+		claimer: {
+			type: Sequelize.SNOWFLAKE,
+		},
+		deliverer: {
+			type: Sequelize.SNOWFLAKE,
+		},
+		status: {
+			type: Sequelize.SNOWFLAKE,
+			allowNull: false
+		},
+		tipped: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false
+		},
+		rated: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false
+		},
+		cookFinish: {
+			type: Sequelize.DATE,
+			defaultValue: new Date(3000, 12, 31)
+		},
+		deliverFinish: {
+			type: Sequelize.DATE,
+			defaultValue: new Date(3000, 12, 31)
+		},
+		expireFinish: {
+			type: Sequelize.DATE,
+			defaultValue: new Date(3000, 12, 31)
+		},
+		message: {
+			type: Sequelize.SNOWFLAKE
+		},
+		channel: {
+			type: Sequelize.SNOWFLAKE,
+			allowNull: false
+		}
+	}),
 };
 exports.Op = Op;
