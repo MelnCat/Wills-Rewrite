@@ -14,11 +14,13 @@ module.exports = {
 	times: { deliver: 540000, expire: 1200000 },
 	status: ["Unclaimed", "Claimed", "Cooking", "Cooked", "Delivered", "Deleted", "Expired", "Cancelled"],
 	cstatus: ["OK", "Database Error.", "Internal Error."],
+	// * SNOWFLAKES
+	mainServer: "511327780726898700",
 	channels: {
-		ticket: "543614876057337866"
+		ticket: "544342574568177675"
 	},
 	roles: {
-		employee: "543842827977621541",
+		employee: "544335428401102878",
 		// TODO - absent: "543842827977621542"
 	}
 };

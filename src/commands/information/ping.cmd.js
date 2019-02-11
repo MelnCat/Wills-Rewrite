@@ -3,7 +3,7 @@ const pms = require("pretty-ms");
 const bipms = (x, etc = {}) => pms(Number(x) / 1000000, { formatSubMs: true, ...etc });
 const { get } = require("r2");
 module.exports = new Command("ping", "Gets the bot latency.", 0)
-	.setFunction(async(client, message, args, now) => {
+	.setFunction(async(client, message, args) => {
 		const { sequelize } = client.getModule("sql");
 
 		if (args[0] && args[0].toLowerCase() === "simple") {
@@ -21,7 +21,7 @@ module.exports = new Command("ping", "Gets the bot latency.", 0)
 		// eslint-disable-next-line no-undef
 		const updatedn = BigInt(+updated);
 		const diff = process.hrtime.bigint() - updatedn;
-		temp[0] = now;
+		temp[0] = message.command.onRecieved;
 		delays.command = calc(0);
 		temp[1] = process.hrtime.bigint();
 		const m = await message.channel.send("Fetching responses..");

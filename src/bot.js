@@ -16,6 +16,16 @@ Object.defineProperty(Error.prototype, "shortcolors", {
 		return `${chalk.redBright(this.name)}: ${chalk.red(this.message)}`;
 	}
 });
+Object.defineProperty(Discord.GuildMember.prototype, "isEmployee", {
+	get() {
+		return this.roles.has(client.mainRoles.employee.id) && this.guild.id === client.mainGuild.id;
+	}
+});
+Object.defineProperty(Discord.GuildMember.prototype, "tag", {
+	get() {
+		return `${this.displayName}#${this.user.discriminator}`;
+	}
+});
 client.log("Starting bot...");
 client.on("ready", async() => {
 	client.user.setActivity("Just started! Order donuts!");
@@ -32,6 +42,20 @@ client.on("ready", async() => {
 	client.log(`${chalk.cyanBright("Bot started!")} Logged in at ${chalk.bold(client.user.tag)}. ID: ${chalk.blue(client.user.id)}`);
 	client.log(`Currently in ${chalk.greenBright(client.guilds.size)} guild(s)!`);
 });
+client.on("guildMemberUpdate", async(oldM, newM) => {
+	if (oldM.isEmployee && !newM.isEmployee) {
+		client.emit("fire", newM);
+	}
+	if (!oldM.isEmployee && newM.isEmployee) {
+		client.emit("hire", newM);
+	}
+});
+client.on("fire", member => {
+	client.log(`oh fuck, ${member.tag} is fired.`);
+});
+client.on("hire", member => {
+	client.log(`oh yay, ${member.tag} is hired.`);
+});
 client.on("messageUpdate", async(oldMessage, newMessage) => {
 	if (oldMessage.createdAt < Date.now() - 30000) return;
 	client.emit("message", newMessage);
@@ -39,8 +63,7 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 client.on("message", async message => {
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
-	const now = process.hrtime.bigint();
-	if (message.author.bot) return;
+	if (message.author.bot || !message.guild) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
 	const prefixes = [defaultPrefix, `<@${client.user.id}>`, `<@!${client.user.id}>`, message.guild.info.prefix];
@@ -52,8 +75,13 @@ client.on("message", async message => {
 	if (!client.getCommand(command)) return;
 	try {
 		const gcommand = await client.getCommand(command);
+		message.command = {
+			onRecieved: process.hrtime.bigint(),
+			name: gcommand.name,
+			prefix,
+		};
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
-		await gcommand.exec(client, message, args, now);
+		await gcommand.exec(client, message, args);
 	} catch (err) {
 		await message.channel.send(`${errors.internal}
 \`\`\`js

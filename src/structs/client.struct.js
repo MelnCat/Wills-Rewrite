@@ -9,7 +9,6 @@ const { token } = require("../auth");
 module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
 		super({ disableEveryone: true, shardCount: shards });
-		this.commands = new Collection();
 		this.loadCommands();
 		this.strings = this.getModule("strings");
 		this.utils = this.getModule("utils");
@@ -45,8 +44,13 @@ module.exports = class DiscordDonuts extends Client {
 		this.mainChannels = {};
 		this.on("ready", async() => {
 			for (const [name, channel] of Object.entries(this.strings.channels)) {
-				const chan = this.channels.get(channel);
+				const chan = this.mainGuild.channels.get(channel);
 				if (!chan) {
+					if (this.channels.get(channel)) {
+						this.error(`Channel ${chalk.magenta(name)} was not found in the main guild\
+, but it was instead found in the guild ${chalk.blue(this.channels.get(channel).guild.name)}.`);
+						continue;
+					}
 					this.error(`Channel ${chalk.magenta(name)} was not found.`);
 					continue;
 				}
@@ -93,11 +97,12 @@ module.exports = class DiscordDonuts extends Client {
 		return `${st}${order.status === 1 ? ` by ${cl.tag}` : ""}`;
 	}
 	loadCommands() {
+		this.commands = new Collection();
 		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => [file, require(`../.${file}`)]);
 		for (const [path, command] of commandFiles) {
 			if (this.commands.has(command.name)) return this.error(`Attempted to load command ${chalk.redBright(command.name)}, but the command already exists. Path: ${chalk.yellowBright(path)}`);
 			this.commands.set(command.name, command);
-			this.log(`Command ${chalk.magentaBright(command.name)} loaded!`);
+			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}
 	}
 	refreshAuth() {
@@ -105,7 +110,7 @@ module.exports = class DiscordDonuts extends Client {
 		return require("../auth");
 	}
 	get mainGuild() {
-		return this.guilds.get(this.auth.mainServer);
+		return this.guilds.get(this.strings.mainServer);
 	}
 	getMainChannel(channelResolvable) {
 		if (this.auth.channels[channelResolvable]) channelResolvable = this.auth.channels[channelResolvable];
