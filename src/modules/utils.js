@@ -49,3 +49,19 @@ exports.chunk = (array = [], size = 3) => {
 	}
 	return res;
 };
+exports.getText = async(message, display = "Respond with text.", time = 40000, filter = m => m.author.id === message.author.id) => {
+	await message.channel.send(display);
+	const res = await message.channel.awaitMessages(m => filter(m) && m.author.id === message.author.id, { time, max: 1 });
+	if (!res.size) return void message.channel.send("No response. Cancelled.");
+	return res.first().content;
+};
+exports.getIndex = async(message, list, internal = list.map((x, i) => x === null ? list[i] : x), display = "item") => {
+	const mapped = list.map((x, i) => `[${i + 1}] ${x}`);
+	const index = await exports.getText(message, `Please reply with the index of the ${display}.
+	\`\`\`ini
+	${mapped.join("\n")}
+	\`\`\`
+	`, 40000, m => !isNaN(m.content) && m.content > 0 && m.content <= list.length);
+	if (!index) return false;
+	return { index: index - 1, item: internal[index - 1], displayItem: list[index - 1] };
+};

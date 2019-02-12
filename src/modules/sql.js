@@ -54,6 +54,9 @@ exports.models = {
 				not: /^\s*$/
 			}
 		},
+		url: {
+			type: Sequelize.TEXT
+		},
 		claimer: {
 			type: Sequelize.SNOWFLAKE,
 		},

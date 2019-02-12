@@ -13,6 +13,6 @@ module.exports = new Command("help", "Gets a list of all the commands.", 0)
 			for (const cmd of cmds) {
 				embed.addField([cmd.name, ...cmd.aliases].join(", "), `${cmd.description}`);
 			}
-			await message.author.send(embed)
+			await message.author.send(embed);
 		}
 	});
