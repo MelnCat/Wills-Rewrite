@@ -1,4 +1,6 @@
 const { models: { orders }, Op } = require("../modules/sql");
+const perms = require("../modules/permissions");
+const { findBestMatch, compareTwoStrings } = require("string-similarity");
 exports.hash = string => {
 	string = String(string);
 	var hash = 0, i, chr;
@@ -58,10 +60,105 @@ exports.getText = async(message, display = "Respond with text.", time = 40000, f
 exports.getIndex = async(message, list, internal = list.map((x, i) => x === null ? list[i] : x), display = "item") => {
 	const mapped = list.map((x, i) => `[${i + 1}] ${x}`);
 	const index = await exports.getText(message, `Please reply with the index of the ${display}.
-	\`\`\`ini
-	${mapped.join("\n")}
-	\`\`\`
+\`\`\`ini
+${mapped.join("\n")}
+\`\`\`
 	`, 40000, m => !isNaN(m.content) && m.content > 0 && m.content <= list.length);
 	if (!index) return false;
 	return { index: index - 1, item: internal[index - 1], displayItem: list[index - 1] };
+};
+exports.getOrder = async(client, message, args, argn = 0, { between, is } = {}, override = false) => {
+	const filter = is !== undefined ? { [Op.eq]: is } : { [Op.between]: between };
+	let order;
+	if (await orders.findByPk(args[argn])) order = await orders.findByPk(args[argn]);
+	if (!order) {
+		let morders = await orders.findAll({ where: { status: filter }, order: [["createdAt", "DESC"]] });
+		if (is > 0 && is < 4) {
+			morders = morders.filter(x => x.claimer === message.author.id);
+			if (morders.length === 1) order = morders[0];
+		} else {
+			const orderdis = morders.map(x => `${client.status(x)} - ${x.description}`);
+			const res = await exports.getIndex(message, orderdis, morders, "order");
+			if (!res) return;
+			order = res.item;
+		}
+	}
+	if (!override && !await orders.findOne({ where: { status: filter, id: order.id } })) return void await message.channel.send("The fetched order did not meet the status requirements.");
+	return order;
+};
+exports.getUser = async(client, message, args, argn = 0, autoself = false, onlyargn = true, filter = () => true) => {
+	let selecting = args.slice(argn, onlyargn ? argn + 1 : args.length).join(" ");
+	let user;
+	if (!args[argn] && autoself) {
+		user = message.author;
+	} else if (!args[argn] && !autoself) {
+		return void await message.channel.send("You did not provide a user.");
+	} else if (message.mentions.users.size) {
+		user = message.mentions.users.first();
+	} else if (!isNaN(args[argn])) {
+		user = client.users.get(args[argn]);
+		if (!user) {
+			return void await message.channel.send("That is not a valid id.");
+		}
+	} else {
+		const userlist = client.mainGuild.members.concat(message.guild.members).sort(
+			(a, b) => compareTwoStrings(selecting, b.tag) - compareTwoStrings(selecting, a.tag)
+		)
+			.filter(x => filter(x.user || x))
+			.array();
+		if (!userlist.length) return;
+		let names = userlist.map(x => x.tag).slice(0, 5);
+		const nameDict = await exports.getIndex(message, names, userlist, "user");
+		if (!nameDict) return;
+		const u = nameDict.item;
+		if (!u) client.log(nameDict);
+		user = u.user || u;
+	}
+	if (!user) throw new Error("No user?");
+	if (!filter(user)) return void await message.channel.send("That user did not pass the filter.");
+	return user;
+};
+exports.execPermission = (id, client, member) => {
+	for (const i of Math.range(Object.keys(perms).length - id, id)) {
+		if (perms[i](client, member)) return true;
+	}
+	return false;
+};
+exports.ProgressBar = class ProgressBar {
+	constructor(min = 0, max = 100, filled = "▓", unfilled = "░") {
+		this.min = min;
+		this.max = max;
+		this.filled = filled;
+		this.unfilled = unfilled;
+	}
+	generate(progress = this.max / 2, { percent = false, decimals = 0, prefix = "", total = this.max } = {}) {
+		if (progress < 0) progress = 0;
+		let s = progress * (total / this.max);
+		if (s < 0) s = 0;
+		let f = this.filled.repeat(s);
+		let t = total - f.length;
+		if (t < 0) t = 0;
+		let u = this.unfilled.repeat(t);
+		let e = "";
+		let p = "";
+		if (prefix) p = `${prefix} `;
+		if (percent) e = ` ${((progress / this.max) * 100).toFixed(decimals)}%`;
+		return `${p}${f}${u}${e}`;
+	}
+	setMin(m) {
+		this.min = m;
+		return this;
+	}
+	setMax(m) {
+		this.max = m;
+		return this;
+	}
+	setFilled(f) {
+		this.filled = f;
+		return this;
+	}
+	setUnfilled(u) {
+		this.unfilled = u;
+		return this;
+	}
 };

@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const Client = require("./client.struct");
 const perms = require("../modules/permissions");
+const { execPermission } = require("../modules/utils");
 module.exports = class Command {
 	constructor(name, description, permissions) {
 		this.name = name;
@@ -9,6 +10,7 @@ module.exports = class Command {
 		this.aliases = [];
 		this.shortcuts = [];
 		this.hidden = false;
+		this.category = "none";
 	}
 	setFunction(exec) {
 		this.exec = exec;
@@ -30,9 +32,6 @@ module.exports = class Command {
 		return message.channel.send("No function has been set for this command.");
 	}
 	execPermissions(client = new Client(), member = new Discord.GuildMember) {
-		for (const i of Math.range(this.permissions + 1)) {
-			if (perms[i](client, member)) return true;
-		}
-		return false;
+		return execPermission(this.permissions, client, member);
 	}
 };

@@ -6,6 +6,8 @@ const { timestamp } = require("../modules/utils");
 const { compareTwoStrings } = require("string-similarity");
 const { inspect } = require("util");
 const { token } = require("../auth");
+const { basename, dirname } = require("path");
+const Command = require("./command.struct");
 module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
 		super({ disableEveryone: true, shardCount: shards });
@@ -16,18 +18,38 @@ module.exports = class DiscordDonuts extends Client {
 		this.status = 0;
 		this.errors = this.strings.errors;
 		this.statuses = ["with donuts."];
-		this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000);
-		this.statusInterval = setInterval(() => {
-			if (!this.user.presence.activity) return;
-			if (this.status && this.user.presence.activity.name !== this.strings.cstatus[this.status]) this.user.setActivity(this.strings.cstatus[this.status]);
-			if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
-		}, 10000);
 		this.util = Util;
 		this.loadChannels();
 		this.loadRoles();
+		this.loadEmojis();
+		this.loadIntervals();
+	}
+	loadIntervals() {
+		this.on("ready", () => {
+			this.statusInterval = setInterval(() => {
+				if (!this.user.presence.activity) return;
+				if (this.status && this.user.presence.activity.name !== this.strings.cstatus[this.status]) this.user.setActivity(this.strings.cstatus[this.status]);
+				if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
+			}, 10000);
+			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000);
+		});
 	}
 	loadRoles() {
 		this.mainRoles = {};
+		this.on("ready", async() => {
+			for (const [name, role] of Object.entries(this.strings.roles)) {
+				const r = this.mainGuild.roles.get(role);
+				if (!r) {
+					this.error(`Role ${chalk.blue(name)} was not found.`);
+					continue;
+				}
+				this.mainRoles[name] = r;
+				this.log(`Role ${chalk.cyan(name)} was loaded!`);
+			}
+		});
+	}
+	loadEmojis() {
+		this.mainEmojis = {};
 		this.on("ready", async() => {
 			for (const [name, role] of Object.entries(this.strings.roles)) {
 				const r = this.mainGuild.roles.get(role);
@@ -98,9 +120,17 @@ module.exports = class DiscordDonuts extends Client {
 	}
 	loadCommands() {
 		this.commands = new Collection();
-		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => [file, require(`../.${file}`)]);
+		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => [dirname(`../.${file}`), require(`../.${file}`)]);
 		for (const [path, command] of commandFiles) {
-			if (this.commands.has(command.name)) return this.error(`Attempted to load command ${chalk.redBright(command.name)}, but the command already exists. Path: ${chalk.yellowBright(path)}`);
+			if (!(command instanceof Command)) {
+				this.error(`Attempted to load command ${chalk.redBright(command.name)}, but it wasn't a command. Path: ${chalk.yellowBright(path)}`);
+				continue;
+			}
+			if (this.commands.has(command.name)) {
+				this.error(`Attempted to load command ${chalk.redBright(command.name)}, but the command already exists. Path: ${chalk.yellowBright(path)}`);
+				continue;
+			}
+			command.category = basename(path);
 			this.commands.set(command.name, command);
 			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}

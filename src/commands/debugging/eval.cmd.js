@@ -5,8 +5,7 @@ module.exports = new Command("eval", "Eval javascript code.", 4)
 		try {
 			let toEval = args.join(" ");
 			if (!toEval) return message.channel.send(client.errors.arguments);
-			let com = await eval(`(async () => \{${toEval}\})()`); // eslint-disable-line no-eval, no-useless-escape
-
+			let com = await eval(`(async () => {${toEval}})()`);
 			let type = "Unknown";
 			try {
 				type = com.constructor.name;
@@ -19,6 +18,7 @@ module.exports = new Command("eval", "Eval javascript code.", 4)
 			await message.channel.send(`\`\`\`js\n${com.substr(0, 1987)}${isOutHigh ? "..." : ""}\`\`\``);
 			await message.channel.send(`**TYPE**\n\`\`\`js\n${type}\n\`\`\``);
 		} catch (e) {
+			if (!e.stack) e.stack = e.toString();
 			let isErrHigh = e.stack.length > 1987;
 			await message.channel.send(`\`\`\`js\n${e.stack.substr(0, 1987)}${isErrHigh ? "..." : ""}\`\`\``);
 		}

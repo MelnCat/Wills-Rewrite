@@ -83,12 +83,16 @@ client.on("message", async message => {
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args);
 	} catch (err) {
-		await message.channel.send(`${errors.internal}
+		if (client.errors.codes[err.code]) {
+			await message.channel.send(client.errors.codes[err.code]);
+		} else {
+			await message.channel.send(`${errors.internal}
 \`\`\`js
 ${err.stack}
 \`\`\`
 		`);
-		client.error(err);
+		}
+		client.error(err.stack);
 	}
 });
 /*

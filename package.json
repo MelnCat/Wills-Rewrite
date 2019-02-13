@@ -4,7 +4,8 @@
   "description": "",
   "main": "./src/bot.js",
   "scripts": {
-    "test": "echo hi"
+    "test": "echo hi",
+    "start": "node ./src/bot.js"
   },
   "repository": {
     "type": "git",

@@ -8,6 +8,14 @@ module.exports = {
 		dms: "✉ I was unable to DM you. Please try enabling DMs.",
 		expired: "⌛ Sorry, your order expired. Please try ordering another.",
 		nonexistent: "❎ You currently do not have an order. Order one!",
+		codes: {
+			403: "📠 Server refused action.",
+			418: "🍵 I'm a teapot.",
+			500: "🔧 Discord is currently having an internal server error. Sorry!",
+			503: "🚪 The Discord API is currently unavaliable. Sorry!",
+			504: "⏲ Discord's gateway timed out. Sorry!",
+			50013: "📝 I do not have enough permissions in this guild, therefore that command is unavaliable.",
+		}
 	},
 	prefix: "d!!",
 	permissions: ["EVERYONE", "SERVER MODERATOR", "EMPLOYEE", "DONUT ADMIN", "BOT MANAGER"],
@@ -22,5 +30,9 @@ module.exports = {
 	roles: {
 		employee: "544335428401102878",
 		// TODO - absent: "543842827977621542"
-	}
+	},
+	emojis: {
+		yes: "545049026366537761",
+		no: "545047514584317962"
+	},
 };
