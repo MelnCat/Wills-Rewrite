@@ -119,7 +119,7 @@ exports.getUser = async(client, message, args, argn = 0, autoself = false, onlya
 	return user;
 };
 exports.execPermission = (id, client, member) => {
-	for (const i of Math.range(Object.keys(perms).length - id, id)) {
+	for (const i of Math.range(perms.length - id, id)) {
 		if (perms[i](client, member)) return true;
 	}
 	return false;
