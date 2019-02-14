@@ -67,17 +67,19 @@ ${mapped.join("\n")}
 	if (!index) return false;
 	return { index: index - 1, item: internal[index - 1], displayItem: list[index - 1] };
 };
-exports.getOrder = async(client, message, args, argn = 0, { between, is } = {}, override = false) => {
+exports.getOrder = async(message, args, argn = 0, { between, is } = { is: 0 }, override = false, display = "check") => {
+	const client = message.client;
 	const filter = is !== undefined ? { [Op.eq]: is } : { [Op.between]: between };
 	let order;
 	if (await orders.findByPk(args[argn])) order = await orders.findByPk(args[argn]);
 	if (!order) {
 		let morders = await orders.findAll({ where: { status: filter }, order: [["createdAt", "DESC"]] });
+		if (!morders.length) return void await message.channel.send(`There are currently no orders to ${display}.`);
 		if (is > 0 && is < 4) {
 			morders = morders.filter(x => x.claimer === message.author.id);
 			if (morders.length === 1) order = morders[0];
 		} else {
-			const orderdis = morders.map(x => `${client.status(x)} - ${x.description}`);
+			const orderdis = morders.map(x => `${x.id} - ${x.description} [${client.statusOf(x)}]`);
 			const res = await exports.getIndex(message, orderdis, morders, "order");
 			if (!res) return;
 			order = res.item;
@@ -86,7 +88,8 @@ exports.getOrder = async(client, message, args, argn = 0, { between, is } = {}, 
 	if (!override && !await orders.findOne({ where: { status: filter, id: order.id } })) return void await message.channel.send("The fetched order did not meet the status requirements.");
 	return order;
 };
-exports.getUser = async(client, message, args, argn = 0, autoself = false, onlyargn = true, filter = () => true) => {
+exports.getUser = async(message, args, argn = 0, autoself = false, onlyargn = true, filter = () => true) => {
+	const client = message.client;
 	let selecting = args.slice(argn, onlyargn ? argn + 1 : args.length).join(" ");
 	let user;
 	if (!args[argn] && autoself) {

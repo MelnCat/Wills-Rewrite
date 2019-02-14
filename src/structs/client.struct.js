@@ -6,7 +6,7 @@ const { timestamp } = require("../modules/utils");
 const { compareTwoStrings } = require("string-similarity");
 const { inspect } = require("util");
 const { token } = require("../auth");
-const { basename, dirname } = require("path");
+const { basename, dirname, resolve } = require("path");
 const Command = require("./command.struct");
 module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
@@ -108,19 +108,25 @@ module.exports = class DiscordDonuts extends Client {
 **Channel**: #${this.channels.get(order.channel).name} (${order.channel})
 **Guild**: ${guild.name} (${guild.id})
 `)
-			.addField("💻 Status", this.status(order));
+			.addField("💻 Status", this.statusOf(order));
 	}
 	simplestatus(s) {
 		return this.strings.status[s];
 	}
-	status(order) {
+	statusOf(order) {
 		const st = this.simplestatus(order.status);
 		const cl = this.users.get(order.claimer);
 		return `${st}${order.status === 1 ? ` by ${cl.tag}` : ""}`;
 	}
+	reloadCommands() {
+		this.loadCommands();
+	}
 	loadCommands() {
 		this.commands = new Collection();
-		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => [dirname(`../.${file}`), require(`../.${file}`)]);
+		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => {
+			delete require.cache[resolve(file)];
+			return [dirname(`../.${file}`), require(`../.${file}`)];
+		});
 		for (const [path, command] of commandFiles) {
 			if (!(command instanceof Command)) {
 				this.error(`Attempted to load command ${chalk.redBright(command.name)}, but it wasn't a command. Path: ${chalk.yellowBright(path)}`);
@@ -135,10 +141,7 @@ module.exports = class DiscordDonuts extends Client {
 			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}
 	}
-	refreshAuth() {
-		delete require.cache[require.resolve("../auth")];
-		return require("../auth");
-	}
+
 	get mainGuild() {
 		return this.guilds.get(this.strings.mainServer);
 	}
@@ -157,6 +160,14 @@ module.exports = class DiscordDonuts extends Client {
 		console.log(`${chalk.gray(this.timestamp())} ${str}`);
 	}
 	getModule(m) {
+		return require(`${__dirname}\\..\\modules\\${m}`);
+	}
+	refreshAuth() {
+		delete require.cache[require.resolve("../auth")];
+		return require("../auth");
+	}
+	refreshModule(m) {
+		delete require.cache[require.resolve(`${__dirname}\\..\\modules\\${m}`)];
 		return require(`${__dirname}\\..\\modules\\${m}`);
 	}
 	getModel(m) {

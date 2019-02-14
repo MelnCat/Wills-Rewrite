@@ -6,7 +6,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = new Command("permissions", "Check your own bot permissions.", 0)
 	.setAlias("perms")
 	.setFunction(async(client, message, args) => {
-		const user = await client.utils.getUser(client, message, args, 0, true, true, u => message.guild.members.get(u.id));
+		const user = await client.utils.getUser(message, args, 0, true, true, u => message.guild.members.get(u.id));
 		const member = message.guild.members.get(user.id);
 		const permissions = Object.values(client.getModule("permissions")).map((x, i) => [client.strings.permissions[i], i]);
 		const embed = new MessageEmbed()
