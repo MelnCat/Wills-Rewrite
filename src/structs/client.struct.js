@@ -51,14 +51,14 @@ module.exports = class DiscordDonuts extends Client {
 	loadEmojis() {
 		this.mainEmojis = {};
 		this.on("ready", async() => {
-			for (const [name, role] of Object.entries(this.strings.roles)) {
-				const r = this.mainGuild.roles.get(role);
+			for (const [name, emoji] of Object.entries(this.strings.emojis)) {
+				const r = this.emojis.get(emoji);
 				if (!r) {
-					this.error(`Role ${chalk.blue(name)} was not found.`);
+					this.error(`Emoji ${chalk.blue(name)} was not found.`);
 					continue;
 				}
 				this.mainRoles[name] = r;
-				this.log(`Role ${chalk.cyan(name)} was loaded!`);
+				this.log(`Emoji ${chalk.cyan(name)} was loaded!`);
 			}
 		});
 	}
