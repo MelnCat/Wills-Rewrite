@@ -68,7 +68,7 @@ ${mapped.join("\n")}
 	if (!index) return false;
 	return { index: index - 1, item: internal[index - 1], displayItem: list[index - 1] };
 };
-exports.getOrder = async(message, args, argn = 0, { between, is } = { is: 0 }, override = false, display = "check") => {
+exports.getOrder = async(message, args, argn = 0, { between, is } = { is: 0 }, override = false, display = "check", claimoverride) => {
 	const client = message.client;
 	const filter = is !== undefined ? { [Op.eq]: is } : { [Op.between]: between };
 	let order;
@@ -76,7 +76,7 @@ exports.getOrder = async(message, args, argn = 0, { between, is } = { is: 0 }, o
 	if (!order) {
 		let morders = await orders.findAll({ where: { status: filter }, order: [["createdAt", "DESC"]] });
 		if (!morders.length) return void await message.channel.send(`There are currently no orders to ${display}.`);
-		if (is > 0 && is < 4) {
+		if (is > 0 && is < 4 && !claimoverride) {
 			morders = morders.filter(x => x.claimer === message.author.id);
 			if (morders.length === 1) order = morders[0];
 		} else {
