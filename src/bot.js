@@ -1,5 +1,5 @@
 const Client = require("./structs/client.struct");
-const client = new Client(2);
+const client = require("./modules/client");
 const Discord = require("discord.js");
 const chalk = require("chalk");
 const strings = client.getModule("strings");
@@ -50,6 +50,9 @@ client.on("guildMemberUpdate", async(oldM, newM) => {
 		client.emit("hire", newM);
 	}
 });
+client.on("guildMemberRemove", async member => {
+	if (member.isEmployee) client.emit("fire", member);
+});
 client.on("fire", member => {
 	client.log(`oh fuck, ${member.tag} is fired.`);
 });
@@ -63,6 +66,12 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 client.on("message", async message => {
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
+	message.channel.assert = async function assert(id) {
+		if (this.id !== id) {
+			this.send(client.errors.channel.replace("{}", id));
+			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
+		}
+	};
 	if (message.author.bot || !message.guild) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
@@ -83,6 +92,7 @@ client.on("message", async message => {
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args);
 	} catch (err) {
+		if (err.name === "WrongChannelError") return;
 		if (client.errors.codes[err.code]) {
 			await message.channel.send(client.errors.codes[err.code]);
 		} else {
@@ -99,10 +109,8 @@ ${err.stack}
 * SQL OnUpdate
 */
 orders.afterCreate(async(order, options) => {
-	await client.users.get(order.user).send("Thank you for ordering a donut. Your order was sent to our cooks.");
-	order.expireFinish = Date.now() + client.strings.times.expire;
 	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
-	await order.update({ message: tm });
+	await order.update({ message: tm.id, expireFinish: Date.now() + client.strings.times.expire });
 });
 orders.beforeDestroy(async(order, options) => {
 	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
@@ -113,6 +121,11 @@ orders.beforeUpdate(async(order, options) => {
 	if (!client.channels.get(order.channel)) return order.destroy();
 	if (order.status < 4 && order.message && !client.mainChannels.ticket.messages.fetch(order.message)) return order.destroy();
 	switch (order.status) {
+		case 2: {
+			if (!order.url) return order.update({ status: 1 });
+			await client.users.get(order.user).send("Your order is now cooking.");
+			break;
+		}
 		case 6: {
 			await client.users.get(order.user).send(client.errors.expired);
 		}
@@ -124,6 +137,7 @@ orders.beforeUpdate(async(order, options) => {
 		}
 	} else {
 		const tm = await client.mainChannels.ticket.messages.fetch(order.message);
+		if (!tm || !tm.edit) return order.destroy();
 		tm.edit(client.createTicket(order));
 	}
 });

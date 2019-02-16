@@ -13,7 +13,7 @@ module.exports = new Command("permissions", "Check your own bot permissions.", 0
 			.setTitle("Permissions")
 			.setDescription(`Permissions for ${member.tag}.`);
 		for (const [name, index] of permissions) {
-			embed.addField(name, client.utils.execPermission(index, client, member) ? "✔" : "✖", true);
+			embed.addField(name, client.utils.execPermission(index, member) ? client.mainEmojis.yes : client.mainEmojis.no, true);
 		}
 		return message.channel.send(embed);
 	});

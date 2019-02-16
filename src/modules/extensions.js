@@ -25,4 +25,37 @@ String.prototype.random = function random() {
 String.prototype.equalsAny = function equalsAny(...strings) {
 	return strings.includes(this.valueOf());
 };
+String.prototype.replaceCase = function replaceCase(search, replacement) {
+	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement).matchCase(m.concat(m)));
+};
+String.prototype.replaceAll = function replaceAll(search, replacement) {
+	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement));
+};
+String.prototype.bulkReplace = function bulkReplace(replacer) {
+	// eslint-disable-next-line consistent-this
+	let res = this;
+	for (const x in replacer) {
+		res = res.replaceAll(x, replacer[x]);
+	}
+	return res;
+};
+String.prototype.matchCase = function matchCase(pattern) {
+	var result = "";
+
+	for (var i = 0; i < this.length; i++) {
+		var c = this.charAt(i);
+		var p = pattern.charCodeAt(i);
+
+		if (p >= 65 && p < 65 + 26) {
+			result += c.toUpperCase();
+		} else {
+			result += c.toLowerCase();
+		}
+	}
+
+	return result;
+};
+String.prototype.escapeRegExp = function escapeRegExp() {
+	return this.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
 module.exports = "Ok!";

@@ -1,6 +1,7 @@
 const { models: { orders }, Op } = require("../modules/sql");
 const perms = require("../modules/permissions");
 const { findBestMatch, compareTwoStrings } = require("string-similarity");
+const { MessageEmbed } = require("discord.js");
 exports.hash = string => {
 	string = String(string);
 	var hash = 0, i, chr;
@@ -88,6 +89,12 @@ exports.getOrder = async(message, args, argn = 0, { between, is } = { is: 0 }, o
 	if (!override && !await orders.findOne({ where: { status: filter, id: order.id } })) return void await message.channel.send("The fetched order did not meet the status requirements.");
 	return order;
 };
+exports.alert = async(client, data) => {
+	const embed = new MessageEmbed()
+		.setTitle("Kitchen Alert")
+		.setDescription(data.bulkReplace({ "[orders]": await orders.count({ where: { status: { [Op.lt]: 4 } } }) }));
+	client.mainChannels.kitchen.send(embed);
+};
 exports.getUser = async(message, args, argn = 0, autoself = false, onlyargn = true, filter = () => true) => {
 	const client = message.client;
 	let selecting = args.slice(argn, onlyargn ? argn + 1 : args.length).join(" ");
@@ -121,47 +128,10 @@ exports.getUser = async(message, args, argn = 0, autoself = false, onlyargn = tr
 	if (!filter(user)) return void await message.channel.send("That user did not pass the filter.");
 	return user;
 };
-exports.execPermission = (id, client, member) => {
+exports.execPermission = (id, member) => {
+	const client = member.client;
 	for (const i of Math.range(perms.length - id, id)) {
 		if (perms[i](client, member)) return true;
 	}
 	return false;
-};
-exports.ProgressBar = class ProgressBar {
-	constructor(min = 0, max = 100, filled = "▓", unfilled = "░") {
-		this.min = min;
-		this.max = max;
-		this.filled = filled;
-		this.unfilled = unfilled;
-	}
-	generate(progress = this.max / 2, { percent = false, decimals = 0, prefix = "", total = this.max } = {}) {
-		if (progress < 0) progress = 0;
-		let s = progress * (total / this.max);
-		if (s < 0) s = 0;
-		let f = this.filled.repeat(s);
-		let t = total - f.length;
-		if (t < 0) t = 0;
-		let u = this.unfilled.repeat(t);
-		let e = "";
-		let p = "";
-		if (prefix) p = `${prefix} `;
-		if (percent) e = ` ${((progress / this.max) * 100).toFixed(decimals)}%`;
-		return `${p}${f}${u}${e}`;
-	}
-	setMin(m) {
-		this.min = m;
-		return this;
-	}
-	setMax(m) {
-		this.max = m;
-		return this;
-	}
-	setFilled(f) {
-		this.filled = f;
-		return this;
-	}
-	setUnfilled(u) {
-		this.unfilled = u;
-		return this;
-	}
 };

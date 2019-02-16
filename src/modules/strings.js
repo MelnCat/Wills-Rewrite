@@ -8,6 +8,7 @@ module.exports = {
 		dms: "✉ I was unable to DM you. Please try enabling DMs.",
 		expired: "⌛ Sorry, your order expired. Please try ordering another.",
 		nonexistent: "❎ You currently do not have an order. Order one!",
+		channel: "📲 This command is not avaliable in this channel, try changing the channel to <#{}>.",
 		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",
@@ -25,7 +26,8 @@ module.exports = {
 	// * SNOWFLAKES
 	mainServer: "511327780726898700",
 	channels: {
-		ticket: "544342574568177675"
+		ticket: "544342574568177675",
+		kitchen: "545792707726147585"
 	},
 	roles: {
 		employee: "544335428401102878",

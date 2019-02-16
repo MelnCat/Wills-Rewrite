@@ -14,6 +14,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.loadCommands();
 		this.strings = this.getModule("strings");
 		this.utils = this.getModule("utils");
+		this.classes = this.getModule("classes");
 		this.auth = require("../auth");
 		this.status = 0;
 		this.errors = this.strings.errors;
@@ -54,11 +55,11 @@ module.exports = class DiscordDonuts extends Client {
 			for (const [name, emoji] of Object.entries(this.strings.emojis)) {
 				const r = this.emojis.get(emoji);
 				if (!r) {
-					this.error(`Emoji ${chalk.blue(name)} was not found.`);
+					this.error(`Emoji ${chalk.red(name)} was not found.`);
 					continue;
 				}
-				this.mainRoles[name] = r;
-				this.log(`Emoji ${chalk.cyan(name)} was loaded!`);
+				this.mainEmojis[name] = r;
+				this.log(`Emoji ${chalk.yellow(name)} was loaded!`);
 			}
 		});
 	}
@@ -95,7 +96,7 @@ module.exports = class DiscordDonuts extends Client {
 **Channel**: #${this.channels.get(order.channel).name} (${order.channel})
 **Guild**: ${guild.name} (${guild.id})
 `)
-			.addField("💻 Status", this.status(order));
+			.addField("💻 Status", this.statusOf(order));
 	}
 	customTicket(order, text = "No text specified.") {
 		const guild = this.channels.get(order.channel).guild;
@@ -109,6 +110,9 @@ module.exports = class DiscordDonuts extends Client {
 **Guild**: ${guild.name} (${guild.id})
 `)
 			.addField("💻 Status", this.statusOf(order));
+	}
+	alert(string) {
+		return this.utils.alert(this, string);
 	}
 	simplestatus(s) {
 		return this.strings.status[s];
