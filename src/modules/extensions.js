@@ -1,3 +1,13 @@
+const define = (o, n, p) => {
+	if (typeof o.prototype[n] !== "undefined") return false;
+	o.prototype[n] = p;
+	return true;
+};
+const staticdefine = (o, n, p) => {
+	if (typeof o[n] !== "undefined") return false;
+	o[n] = p;
+	return true;
+};
 /*
 * Process
 */
@@ -5,48 +15,48 @@ process.extensionsLoaded = true;
 /*
 * Math
 */
-Math.sum = (...n) => n.reduce((a, b) => a + b);
-Math.mean = (...n) => Math.sum(...n) / n.length;
-Math.randint = (size, start = 0) => Math.floor(Math.random() * size) + start;
-Math.range = (size, start = 0) => [...Array(size).keys()].map(x => x + start);
+staticdefine(Math, "sum", (...n) => n.reduce((a, b) => a + b));
+staticdefine(Math, "mean", (...n) => Math.sum(...n) / n.length);
+staticdefine(Math, "randint", (size, start = 0) => Math.floor(Math.random() * size) + start);
+staticdefine(Math, "range", (size, start = 0) => [...Array(size).keys()].map(x => x + start));
 /*
 * Array
 */
-Array.prototype.random = function random() {
+define(Array, "random", function random() {
 	return this[Math.randint(this.length)];
-};
-Array.prototype.sum = function sum() {
+});
+define(Array, "sum", function sum() {
 	return this.reduce((a, b) => +a + +b);
-};
+});
 /*
 * String
 */
-String.prototype.replaceLast = function replaceLast(search, replacement) {
+define(String, "replaceLast", function replaceLast(search, replacement) {
 	const n = this.lastIndexOf(search);
 	if (!(n + 1)) return this;
 	return `${this.substring(0, n)}${replacement}${this.substring(n + search.length, this.length)}`.valueOf();
-};
-String.prototype.random = function random() {
+});
+define(String, "random", function random() {
 	return this[Math.randint(this.length)];
-};
-String.prototype.equalsAny = function equalsAny(...strings) {
+});
+define(String, "equalsAny", function equalsAny(...strings) {
 	return strings.includes(this.valueOf());
-};
-String.prototype.replaceCase = function replaceCase(search, replacement) {
+});
+define(String, "replaceCase", function replaceCase(search, replacement) {
 	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement).matchCase(m.concat(m)));
-};
-String.prototype.replaceAll = function replaceAll(search, replacement) {
+});
+define(String, "replaceAll", function replaceAll(search, replacement) {
 	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement));
-};
-String.prototype.bulkReplace = function bulkReplace(replacer) {
+});
+define(String, "bulkReplace", function bulkReplace(replacer) {
 	// eslint-disable-next-line consistent-this
 	let res = this;
 	for (const x in replacer) {
 		res = res.replaceAll(x, replacer[x]);
 	}
 	return res;
-};
-String.prototype.matchCase = function matchCase(pattern) {
+});
+define(String, "matchCase", function matchCase(pattern) {
 	var result = "";
 
 	for (var i = 0; i < this.length; i++) {
@@ -61,8 +71,17 @@ String.prototype.matchCase = function matchCase(pattern) {
 	}
 
 	return result;
-};
-String.prototype.escapeRegExp = function escapeRegExp() {
+});
+define(String, "escapeRegExp", function escapeRegExp() {
 	return this.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-};
+});
+define(String, "splitEnd", function splitEnd(num, every) {
+	return this.slice(0, -num).split().concat(this.slice(-num).splitEvery(every));
+});
+define(String, "splitStart", function splitStart(num, every) {
+	return this.slice(0, num).splitEvery(every).concat(this.slice(num));
+});
+define(String, "splitEvery", function splitEvery(num = 1) {
+	return this.match(new RegExp(`.{1,${num}}`, "g"));
+});
 module.exports = "Ok!";

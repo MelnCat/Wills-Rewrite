@@ -14,6 +14,8 @@ module.exports = new Command("info", "Get info about the bot.", 0)
 			.addField("Bot Uptime", pms(client.uptime), true)
 			.addField("Node.js Version", process.version, true)
 			.addField("Discord.js Version", version, true)
-			.addField("Memory Usage", pb(process.memoryUsage().rss), true);
+			.addField("Memory Usage", pb(process.memoryUsage().rss), true)
+			.addField("Version", await client.getVersion(), true)
+			.setFooter("Discord Donuts is allowed to collect all Command Usage and Direct Messages sent to the bot.");
 		return message.channel.send(embed);
 	});

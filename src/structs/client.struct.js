@@ -149,6 +149,15 @@ module.exports = class DiscordDonuts extends Client {
 	get mainGuild() {
 		return this.guilds.get(this.strings.mainServer);
 	}
+	async getCommits() {
+		const v = await this.utils.execBash("git rev-list --no-merges --count HEAD");
+		if (isNaN(v)) return "???";
+		return v.trim();
+	}
+	async getVersion() {
+		const v = await this.getCommits();
+		return v.padStart(3, 0).splitEnd(2).join(".");
+	}
 	getMainChannel(channelResolvable) {
 		if (this.auth.channels[channelResolvable]) channelResolvable = this.auth.channels[channelResolvable];
 		return this.getMainGuild().channels.get(channelResolvable);
