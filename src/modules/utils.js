@@ -2,6 +2,9 @@ const { models: { orders }, Op } = require("../modules/sql");
 const perms = require("../modules/permissions");
 const { findBestMatch, compareTwoStrings } = require("string-similarity");
 const { MessageEmbed } = require("discord.js");
+const { promisify } = require("util");
+const { exec } = require("child_process");
+const p_exec = promisify(exec);
 exports.hash = string => {
 	string = String(string);
 	var hash = 0, i, chr;
@@ -60,6 +63,18 @@ exports.getText = async(message, display = "Respond with text.", time = 40000, f
 	if (resm.attachments.size) return resm.attachments.first().proxyURL;
 	if (compareTwoStrings(resm.content.toLowerCase(), "cancel") > 0.8) return void message.channel.send("Cancelled.");
 	return resm.content;
+};
+exports.execBash = async str => {
+	const res = [];
+	for (const s of str.split(";")) {
+		try {
+			const r = await p_exec(s);
+			res.push(r.stdout || r.stderr);
+		} catch (err) {
+			return err.stderr || err;
+		}
+	}
+	return res.join("\n");
 };
 exports.getIndex = async(message, list, internal = list.map((x, i) => x === null ? list[i] : x), display = "item") => {
 	const mapped = list.map((x, i) => `[${i + 1}] ${x}`);
