@@ -75,6 +75,7 @@ client.on("message", async message => {
 	if (message.author.bot || !message.guild) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
+	message.author.lastOrder = await orders.findOne({ where: { user: message.author.id }, order: [["createdAt", "DESC"]] });
 	const prefixes = [defaultPrefix, `<@${client.user.id}>`, `<@!${client.user.id}>`, message.guild.info.prefix];
 	const prefix = prefixes.find(x => message.content.startsWith(x));
 	if (!prefix) return;
@@ -123,11 +124,28 @@ orders.beforeUpdate(async(order, options) => {
 	switch (order.status) {
 		case 2: {
 			if (!order.url) return order.update({ status: 1 });
-			await client.users.get(order.user).send("Your order is now cooking.");
+			await client.users.get(order.user).send(`Your order is now cooking. It will take ${((order.cookFinish - Date.now()) / 60000).toFixed(2)} minutes to finish cooking.`);
+			break;
+		}
+		case 3: {
+			await client.mainChannels.delivery.send(`<@${order.claimer}>, order \`${order.id}\` has finished cooking and is ready to be delivered!`);
+			await order.update({ deliverFinish: Date.now() + client.strings.times.deliver });
+			break;
+		}
+		case 4: {
+			if (!order.deliverer) {
+				await client.channels.get(order.channel).send(`<@${order.user}> Here is your donut! ${order.url}
+Rate your cook using \`d!rate [1-5]\`.
+If you enjoy our services and want to support us, donate at <https://patreon.com/discorddonuts>!
+Have a great day!
+`);
+				return client.mainChannels.delivery.send(`Order \`${order.id}\` has been automatically delivered.`);
+			}
 			break;
 		}
 		case 6: {
 			await client.users.get(order.user).send(client.errors.expired);
+			break;
 		}
 	}
 	if (order.status > 3) {
@@ -142,7 +160,7 @@ orders.beforeUpdate(async(order, options) => {
 	}
 });
 process.on("unhandledRejection", (err, p) => {
-	if (!err.name.equalsAny) client.getModule("extensions");
+	if (!process.extensionsLoaded) client.getModule("extensions");
 	if (err.name.equalsAny("TimeoutError", "SequelizeConnectionError")) {
 		client.status = 1;
 		return client.error(`Database failed to load.`);

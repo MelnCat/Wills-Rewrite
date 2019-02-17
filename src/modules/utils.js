@@ -56,7 +56,10 @@ exports.getText = async(message, display = "Respond with text.", time = 40000, f
 	await message.channel.send(display);
 	const res = await message.channel.awaitMessages(m => filter(m) && m.author.id === message.author.id, { time, max: 1 });
 	if (!res.size) return void message.channel.send("No response. Cancelled.");
-	return res.first().content;
+	const resm = res.first();
+	if (resm.attachments.size) return resm.attachments.first().proxyURL;
+	if (compareTwoStrings(resm.content.toLowerCase(), "cancel") > 0.8) return void message.channel.send("Cancelled.");
+	return resm.content;
 };
 exports.getIndex = async(message, list, internal = list.map((x, i) => x === null ? list[i] : x), display = "item") => {
 	const mapped = list.map((x, i) => `[${i + 1}] ${x}`);

@@ -1,4 +1,8 @@
 /*
+* Process
+*/
+process.extensionsLoaded = true;
+/*
 * Math
 */
 Math.sum = (...n) => n.reduce((a, b) => a + b);
@@ -10,6 +14,9 @@ Math.range = (size, start = 0) => [...Array(size).keys()].map(x => x + start);
 */
 Array.prototype.random = function random() {
 	return this[Math.randint(this.length)];
+};
+Array.prototype.sum = function sum() {
+	return this.reduce((a, b) => +a + +b);
 };
 /*
 * String
