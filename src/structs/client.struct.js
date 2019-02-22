@@ -25,6 +25,17 @@ module.exports = class DiscordDonuts extends Client {
 		this.loadEmojis();
 		this.loadIntervals();
 	}
+	async loadModels() {
+		const { models } = this.getModule("sql");
+		for (const [mname, model] of Object.entries(models)) {
+			try {
+				await model.sync({ alter: true });
+			} catch (err) {
+				this.error(`Model ${mname} failed to load. Reason: ${chalk.red(err.short)}`);
+			}
+		}
+		this.emit("modelsLoaded");
+	}
 	loadIntervals() {
 		this.on("ready", () => {
 			this.statusInterval = setInterval(() => {

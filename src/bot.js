@@ -27,18 +27,15 @@ Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 	}
 });
 client.log("Starting bot...");
+client.on("modelsLoaded", async() => {
+	client.orders = await orders.findAll();
+});
 client.on("ready", async() => {
+	await client.loadModels();
 	client.user.setActivity("Just started! Order donuts!");
 	client.getModule("extensions");
 	const authenErr = await sequelize.authenticate();
 	if (authenErr) client.error(`${chalk.yellow("Database")} failed to load. ${chalk.red(authenErr)}`);
-	for (const [mname, model] of Object.entries(models)) {
-		try {
-			await model.sync({ alter: true });
-		} catch (err) {
-			client.error(`Model ${mname} failed to load. Reason: ${chalk.red(err.short)}`);
-		}
-	}
 	client.log(`${chalk.cyanBright("Bot started!")} Logged in at ${chalk.bold(client.user.tag)}. ID: ${chalk.blue(client.user.id)}`);
 	client.log(`Currently in ${chalk.greenBright(client.guilds.size)} guild(s)!`);
 });
@@ -64,6 +61,7 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 	client.emit("message", newMessage);
 });
 client.on("message", async message => {
+	if (!message.guild) return;
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
@@ -72,7 +70,7 @@ client.on("message", async message => {
 			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
 		}
 	};
-	if (message.author.bot || !message.guild) return;
+	if (message.author.bot) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
 	message.author.lastOrder = await orders.findOne({ where: { user: message.author.id }, order: [["createdAt", "DESC"]] });
@@ -112,9 +110,11 @@ ${err.stack}
 orders.afterCreate(async(order, options) => {
 	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
 	await order.update({ message: tm.id, expireFinish: Date.now() + client.strings.times.expire });
+	client.orders.push(order);
 });
 orders.beforeDestroy(async(order, options) => {
 	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
+	client.orders = client.orders.filter(x => x.id === order.id);
 });
 orders.beforeUpdate(async(order, options) => {
 	if (!options.fields.includes("status")) return;
