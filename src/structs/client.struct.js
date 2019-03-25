@@ -208,6 +208,6 @@ module.exports = class DiscordDonuts extends Client {
 		console.error(`${chalk.redBright(this.timestamp())} ${str}`);
 	}
 	getCommand(commandResolvable) {
-		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (ratio(str, commandResolvable) > 0.85))) || null;
+		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (compareTwoStrings(str, commandResolvable) > 0.85))) || null;
 	}
 };
