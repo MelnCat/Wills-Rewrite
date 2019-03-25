@@ -4,6 +4,7 @@ const moment = require("moment-timezone");
 const chalk = require("chalk");
 const { timestamp } = require("../modules/utils");
 const { compareTwoStrings } = require("string-similarity");
+const { ratio } = require("fuzzball");
 const { inspect } = require("util");
 const { token } = require("../auth");
 const { basename, dirname, resolve } = require("path");
@@ -24,6 +25,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.loadRoles();
 		this.loadEmojis();
 		this.loadIntervals();
+		this.started = true;
 	}
 	async loadModels() {
 		const { models } = this.getModule("sql");
@@ -206,6 +208,6 @@ module.exports = class DiscordDonuts extends Client {
 		console.error(`${chalk.redBright(this.timestamp())} ${str}`);
 	}
 	getCommand(commandResolvable) {
-		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (compareTwoStrings(str, commandResolvable) > 0.65))) || null;
+		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (ratio(str, commandResolvable) > 0.85))) || null;
 	}
 };

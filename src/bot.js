@@ -61,6 +61,7 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 	client.emit("message", newMessage);
 });
 client.on("message", async message => {
+	if (!client.started) return process.exit();
 	if (!message.guild) return;
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
@@ -70,7 +71,6 @@ client.on("message", async message => {
 			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
 		}
 	};
-	if (message.author.bot) return;
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
 	message.author.lastOrder = await orders.findOne({ where: { user: message.author.id }, order: [["createdAt", "DESC"]] });
@@ -91,7 +91,7 @@ client.on("message", async message => {
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args);
 	} catch (err) {
-		if (err.name === "WrongChannelError") return;
+		if (err instanceof client.classes.EndCommand) return;
 		if (client.errors.codes[err.code]) {
 			await message.channel.send(client.errors.codes[err.code]);
 		} else {

@@ -22,6 +22,7 @@
     "discord.js": "git+https://github.com/discordjs/discord.js.git",
     "dom-parser": "^0.1.5",
     "fs-extra": "^7.0.1",
+    "fuzzball": "^1.2.0",
     "glob": "^7.1.3",
     "moment-timezone": "^0.5.23",
     "multipurpose-utils": "^1.0.4",
