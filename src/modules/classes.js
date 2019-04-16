@@ -5,9 +5,9 @@ class GenericError extends Error {
 	}
 }
 class EndCommand extends GenericError {}
-exports.EndCommand = EndCommand
-exports.WrongChannel = class WrongChannelError extends EndCommand {};
-
+exports.EndCommand = EndCommand;
+class WrongChannelError extends EndCommand {}
+exports.WrongChannelError = WrongChannelError;
 exports.ProgressBar = class ProgressBar {
 	constructor(min = 0, max = 100, filled = "▓", unfilled = "░") {
 		this.min = min;
