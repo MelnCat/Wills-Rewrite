@@ -6,6 +6,7 @@ module.exports = new Command("deliver", "Deliver a donut.", 2).setFunction(async
 	const invite = await client.channels
 		.get(order.channel)
 		.createInvite({ unique: true, maxUses: 1, reason: `Donut delivery for ${client.users.get(order.user)}` });
-	await message.channel.send(`${client.emojis.yes} I have DMed you the information for the ticket!`);
+	await message.channel.send(`${client.mainEmojis.yes} I have DMed you the information for the ticket \`${order.id}\`!`);
 	await message.author.send(invite.url, client.customTicket(order, `**Delivery URL**: ${order.url}`));
+	await order.update({ status: 4, deliverer: message.author });
 });
