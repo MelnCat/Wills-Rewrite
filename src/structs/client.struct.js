@@ -111,6 +111,9 @@ module.exports = class DiscordDonuts extends Client {
 `)
 			.addField("💻 Status", this.statusOf(order));
 	}
+	embed(title, description, data) {
+		return new MessageEmbed({ title, description, ...data });
+	}
 	customTicket(order, text = "No text specified.") {
 		const guild = this.channels.get(order.channel).guild;
 		return new MessageEmbed()
