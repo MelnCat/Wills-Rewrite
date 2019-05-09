@@ -45,7 +45,7 @@ module.exports = class DiscordDonuts extends Client {
 				if (this.status && this.user.presence.activity.name !== this.strings.cstatus[this.status]) this.user.setActivity(this.strings.cstatus[this.status]);
 				if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
 			}, 10000);
-			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000);
+			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000, this);
 		});
 	}
 	loadRoles() {

@@ -34,10 +34,14 @@ exports.random.string = (amount = 1) => {
 exports.autoDeliver = async order => {
 	"TODO";
 };
-exports.checkOrders = async() => {
-	const unc = await orders.findAll({ where: { status: 0, expireFinish: { [Op.lt]: Date.now() } } });
-	const dck = await orders.findAll({ where: { status: 2, cookFinish: { [Op.lt]: Date.now() } } });
-	const dlv = await orders.findAll({ where: { status: 3, deliverFinish: { [Op.lt]: Date.now() } } });
+exports.checkOrders = async client => {
+	const all = await orders.findAll();
+	const unc = all.filter(x => x.status === 0);
+	const dck = all.filter(x => x.status === 2);
+	const dlv = all.filter(x => x.status === 3);
+	for (const order of all) {
+		if (!client.users.get(order.user)) await order.destroy();
+	}
 	for (const order of unc) {
 		await order.update({ status: 6 });
 	}

@@ -56,6 +56,15 @@ define(String, "bulkReplace", function bulkReplace(replacer) {
 	}
 	return res;
 });
+define(String, "replaceAsync", async function replaceAsync(replacer, cb) {
+    const promises = [];
+    this.replace(replacer, (match, ...args) => {
+        const promise = cb(match, ...args);
+        promises.push(promise);
+    });
+    const data = await Promise.all(promises);
+    return this.replace(replacer, () => data.shift());
+})
 define(String, "matchCase", function matchCase(pattern) {
 	var result = "";
 

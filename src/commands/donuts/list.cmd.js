@@ -7,7 +7,8 @@ module.exports = new Command("list", "List all donuts.", 2)
 		const embed = client.embed("Order List", "A list of all non-delivered orders.");
 		for (const order of list) {
 			embed.addField(order.id, `**Status**: ${client.statusOf(order)}
-**Details**: ${order.description}`);
+**Description**: ${order.description}
+**Customer**: ${client.users.get(order.user).tag}`);
 		}
 		await message.channel.send(embed);
 	});
