@@ -13,7 +13,7 @@ module.exports = new Command("blacklist", "Blacklist a user.", 4)
 
             let b;
             try{
-                await blacklist.findByPk(id)
+                b = await blacklist.findByPk(id)
             }catch(err) {
                 //do nothing, this is just to see if the user is already blacklisted
             }
