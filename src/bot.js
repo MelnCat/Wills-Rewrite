@@ -94,6 +94,7 @@ ${client.strings.permissionFlags.filter(x => !message.permissions.includes(x)).m
 			onRecieved: process.hrtime.bigint(),
 			name: gcommand.name,
 			prefix,
+			argName: command
 		};
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args);

@@ -117,7 +117,7 @@ exports.alert = async(client, data) => {
 		.setDescription(data.bulkReplace({ "[orders]": await orders.count({ where: { status: { [Op.lt]: 4 } } }) }));
 	client.mainChannels.kitchen.send(embed);
 };
-exports.getUser = async(message, args, argn = 0, autoself = false, onlyargn = true, filter = () => true) => {
+exports.getUser = async(message, args, { autoself = false, argn = 0, onlyargn = true, filter = () => true }) => {
 	const client = message.client;
 	let selecting = args.slice(argn, onlyargn ? argn + 1 : args.length).join(" ");
 	let user;
