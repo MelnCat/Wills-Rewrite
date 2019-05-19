@@ -3,8 +3,8 @@ const Command = require("../../structs/command.struct");
 
 module.exports = new Command("blacklist", "Blacklist a user.", 4)
     .setFunction(async(client, message, args) => {
-        const blacklist = getModel("blacklists")
-        const { Op } = getModule("sql")
+        const blacklist = client.getModel("blacklists")
+        const { Op } = client.getModule("sql")
 
 
             let id = args[0];
