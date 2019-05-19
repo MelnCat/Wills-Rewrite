@@ -19,6 +19,17 @@ module.exports = {
 			50013: "📝 I do not have enough permissions in this guild, so that command is unavaliable.\nTry adding some permissions.",
 		},
 	},
+	permissionFlags: [
+		"CREATE_INSTANT_INVITE",
+		"ADD_REACTIONS",
+		"VIEW_CHANNEL",
+		"SEND_MESSAGES",
+		"EMBED_LINKS",
+		"ATTACH_FILES",
+		"READ_MESSAGE_HISTORY",
+		"USE_EXTERNAL_EMOJIS",
+		"CHANGE_NICKNAME"
+	],
 	prefix: "d!!",
 	permissions: ["EVERYONE", "SERVER MODERATOR", "EMPLOYEE", "DONUT ADMIN", "BOT MANAGER"],
 	times: { deliver: 540000, expire: 1200000 },

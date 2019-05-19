@@ -2,6 +2,7 @@ const Command = require("../../structs/command.struct");
 const pms = require("pretty-ms");
 const bipms = (x, etc = {}) => pms(Number(x) / 1000000, { formatSubMs: true, ...etc });
 const { get } = require("r2");
+const { MessageEmbed } = require("discord.js");
 module.exports = new Command("ping", "Gets the bot latency.", 0)
 	.setFunction(async(client, message, args) => {
 		const { sequelize } = client.getModule("sql");
@@ -33,16 +34,42 @@ module.exports = new Command("ping", "Gets the bot latency.", 0)
 		await sequelize.authenticate();
 		delays.database = calc(3);
 		temp[4] = process.hrtime.bigint();
-		await require("util");
+		await require("discord.js");
 		delays.module = calc(4);
 
-		await m.edit(`🏓 **Ping calculated!** 🏓
-=> Command Delay: ${parse(delays.command)}
-=> Message Delay: ${parse(delays.message)}
-=> Shard Latency: ${parse(delays.shard, true)}
-=> Database Latency: ${parse(delays.database)}
-=> Module Latency: ${parse(delays.module)}
-=> Discord API Status: **${APIstatus}** 
-Last Updated: \`${bipms(diff, { unitCount: 3 })} ago\`
-		`);
+		const embed = new MessageEmbed({
+			title: "🏓 Ping calculated! 🏓",
+			color: Math.floor(Date.now() / 1000) % 16777216,
+			footer: `API Status: ${APIstatus}`,
+			timestamp: Date.now(),
+			fields: [
+				{
+					name: "Command Delay",
+					value: parse(delays.command),
+					inline: true
+				},
+				{
+					name: "Message Delay",
+					value: parse(delays.message),
+					inline: true
+				},
+				{
+					name: "Shard Latency",
+					value: parse(delays.shard),
+					inline: true
+				},
+
+				{
+					name: "Database Latency",
+					value: parse(delays.database),
+					inline: true
+				},
+				{
+					name: "Module Latency",
+					value: parse(delays.module),
+					inline: true
+				}
+			]
+		});
+		await m.edit(embed);
 	});

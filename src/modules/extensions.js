@@ -56,15 +56,15 @@ define(String, "bulkReplace", function bulkReplace(replacer) {
 	}
 	return res;
 });
-define(String, "replaceAsync", async function replaceAsync(replacer, cb) {
-    const promises = [];
-    this.replace(replacer, (match, ...args) => {
-        const promise = cb(match, ...args);
-        promises.push(promise);
-    });
-    const data = await Promise.all(promises);
-    return this.replace(replacer, () => data.shift());
-})
+define(String, "replaceAsync", async function replaceAsync(replacer, replaceFunc) {
+	const promises = [];
+	this.replace(replacer, (match, ...args) => {
+		const promise = replaceFunc(match, ...args);
+		promises.push(promise);
+	});
+	const data = await Promise.all(promises);
+	return this.replace(replacer, () => data.shift());
+});
 define(String, "matchCase", function matchCase(pattern) {
 	var result = "";
 
@@ -80,6 +80,13 @@ define(String, "matchCase", function matchCase(pattern) {
 	}
 
 	return result;
+});
+define(Array, "groupBy", function groupBy(func) {
+	return this.reduce((objectsByKeyValue, obj) => {
+		const value = func(obj);
+		objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+		return objectsByKeyValue;
+	}, {});
 });
 define(String, "escapeRegExp", function escapeRegExp() {
 	return this.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

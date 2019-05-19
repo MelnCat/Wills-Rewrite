@@ -78,9 +78,16 @@ client.on("message", async message => {
 	const prefix = prefixes.find(x => message.content.startsWith(x));
 	if (!prefix) return;
 	message.content = message.content.replace(prefix, "").trim();
+	message.permissions = message.channel.permissionsFor(client.user.id).toArray();
 	const args = message.content.split(/\s+/);
 	const command = args.shift();
+	// COMMAND INFO START
 	if (!client.getCommand(command)) return;
+	if (client.strings.permissionFlags.find(x => !message.permissions.includes(x))) {
+		return message.channel.send(`Sorry, the command failed to process because I do not have enough permissions in this channel.
+I require the following permissions to be added:
+${client.strings.permissionFlags.filter(x => !message.permissions.includes(x)).map(x => `\`${x}\``).join(", ")}`);
+	}
 	try {
 		const gcommand = await client.getCommand(command);
 		message.command = {

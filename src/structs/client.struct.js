@@ -3,7 +3,7 @@ const glob = require("glob");
 const moment = require("moment-timezone");
 const chalk = require("chalk");
 const { timestamp } = require("../modules/utils");
-const { compareTwoStrings } = require("string-similarity");
+const { compareTwoStrings, findBestMatch } = require("string-similarity");
 const { ratio } = require("fuzzball");
 const { inspect } = require("util");
 const { token } = require("../auth");
@@ -20,6 +20,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.status = 0;
 		this.errors = this.strings.errors;
 		this.statuses = ["with donuts."];
+		this.permissionFlags = this.strings.permissionFlags;
 		this.util = Util;
 		this.loadChannels();
 		this.loadRoles();
@@ -161,7 +162,6 @@ module.exports = class DiscordDonuts extends Client {
 			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}
 	}
-
 	get mainGuild() {
 		return this.guilds.get(this.strings.mainServer);
 	}
