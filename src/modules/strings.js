@@ -51,9 +51,4 @@ const strings = {
 		no: "545047514584317962",
 	},
 };
-module.exports = new Proxy(strings, {
-	get(x) {
-		return x in strings ? strings[x] : `strings.${x}`;
-	}
-})
-;
+module.exports = strings;
