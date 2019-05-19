@@ -1,26 +1,14 @@
 const Command = require("../../structs/command.struct");
 
 
-module.exports = new Command("blacklist", "Blacklist a user.", 4)
+module.exports = new Command("blacklist", "Blacklist commands.", 3)
     .setFunction(async(client, message, args) => {
-        const blacklist = client.getModel("blacklists")
+        const blacklists = client.getModel("blacklists")
         const { Op } = client.getModule("sql")
-
-
-            let id = args[0];
-            //if(isNaN(id)) return; //message todo
-            if(!id) return; //message todo
-
-            let b;
-            try{
-                b = await blacklist.findByPk(id)
-            }catch(err) {
-                //do nothing, this is just to see if the user is already blacklisted
-            }
-            if(b !== undefined) return; //message todo
-
-            blacklist.create({ id })
-            //success: todo
+            if(!args[0] || isNaN(args[0])) return message.channel.send(client.strings.invalidID);
+            if(await blacklists.findByPk(args[0])) return message.channel.send(`${client.mainEmojis.no} That ID is already blacklisted!`)
+            await blacklists.create({ id: args[0] })
+               await message.channel.send(`${client.mainEmojis.yes} The ID was successfully blacklisted!`)
+            
     })
-    
-    .setAlias("bl");
+    .setShortcuts("bl");
