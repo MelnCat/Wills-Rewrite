@@ -44,6 +44,7 @@ const strings = {
 	},
 	roles: {
 		employee: "544335428401102878",
+		onduty: "514857451464556596",
 		// TODO - absent: "543842827977621542"
 	},
 	emojis: {
