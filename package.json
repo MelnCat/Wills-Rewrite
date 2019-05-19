@@ -31,7 +31,7 @@
     "pretty-bytes": "^5.1.0",
     "pretty-ms": "^4.0.0",
     "r2": "^2.0.1",
-    "sequelize": "^4.42.0",
+    "sequelize": "^4.44.0",
     "string-similarity": "^3.0.0"
   }
 }

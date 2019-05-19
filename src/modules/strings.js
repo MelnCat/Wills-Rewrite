@@ -1,4 +1,4 @@
-module.exports = {
+const strings = {
 	errors: {
 		internal: "🔌 Sorry! There was an error with this command. Please contact a developer.",
 		blacklisted: "📜 Sorry! You have been blacklisted from the bot. You may not run commands.",
@@ -51,3 +51,9 @@ module.exports = {
 		no: "545047514584317962",
 	},
 };
+module.exports = new Proxy(strings, {
+	get(x) {
+		return x in strings ? strings[x] : `strings.${x}`;
+	}
+})
+;

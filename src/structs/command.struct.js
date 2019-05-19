@@ -19,7 +19,7 @@ module.exports = class Command {
 		this.aliases = aliases;
 		return this;
 	}
-	setShortcut(...shortcuts) {
+	setShortcuts(...shortcuts) {
 		this.shortcuts = shortcuts;
 		return this;
 	}
