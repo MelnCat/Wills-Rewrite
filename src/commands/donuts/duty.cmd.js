@@ -10,4 +10,4 @@ module.exports = new Command("duty", "Go on or off duty.", 2)
 			await message.member.roles.add("id", onduty);
 			await message.reply(`You're now on ${message.command.inputName}!`);
 		}
-	}).setAlias("dudey", "doody", "dowdey", "dooooooty", "dooty", "dudy");
+	}).setAlias("dudey", "dooty");
