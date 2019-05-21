@@ -62,7 +62,18 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 });
 client.on("message", async message => {
 	if (!client.started) return process.exit();
-	if (!message.guild) return;
+	
+	//if (!message.guild) return;
+	if (message.channel.type == "dm") {
+		const e = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setTitle(`${message.author.tag} (ID: ${message.author.id}) sent me this:`)
+			.addField(message.content)
+			.setFooter(`Want to reply? Run \`d!replydm ${message.author.id} <content>\`!`)
+			.setTimestamp();
+		client.user.channels.find(ch => ch.id === client.channels.mailbox).send(e);
+	}
+	
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
