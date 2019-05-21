@@ -1,6 +1,7 @@
 const Command = require("../../structs/command.struct");
 module.exports = new Command("order", "Order a donut.", 0)
 	.setFunction(async(client, message, args, now) => {
+		if (message.channel.type === 'dm') return message.author.send(client.errors.orderdms);
 		const orders = client.getModel("orders");
 		const { Op } = client.getModule("sql");
 		if (message.author.hasOrder) return message.channel.send(client.errors.ordered);
