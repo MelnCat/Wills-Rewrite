@@ -10,6 +10,7 @@ const strings = {
 		nonexistent: "❎ You currently do not have an order. Order one!",
 		channel: "📲 This command is not avaliable in this channel, please change the channel to <#{}>.",
 		url: "📷 The link is invalid.",
+		orderdms: "✉ You cannot order in DMs!",
 		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",
