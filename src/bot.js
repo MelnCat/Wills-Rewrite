@@ -67,7 +67,7 @@ client.on("message", async message => {
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
 		if (this.id !== id) {
-			this.send(client.errors.channel.replace("{}", id));
+			this.send(client.errors.channel.format(id));
 			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
 		}
 	};
@@ -100,15 +100,11 @@ ${client.strings.permissionFlags.filter(x => !message.permissions.includes(x)).m
 		await gcommand.exec(client, message, args);
 	} catch (err) {
 		if (err instanceof client.classes.EndCommand) return;
-		if (client.errors.codes[err.code]) {
-			await message.channel.send(client.errors.codes[err.code]);
-		} else {
-			await message.channel.send(`${errors.internal}
+		await message.channel.send(client.errors.codes[err.code] || `${errors.internal}
 \`\`\`js
 ${err.stack}
 \`\`\`
 		`);
-		}
 		client.error(err.stack);
 	}
 });

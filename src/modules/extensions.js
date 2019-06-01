@@ -100,4 +100,7 @@ define(String, "splitStart", function splitStart(num, every) {
 define(String, "splitEvery", function splitEvery(num = 1) {
 	return this.match(new RegExp(`.{1,${num}}`, "g"));
 });
+define(String, "format", function format(...formats) {
+	return formats.reduce((l, x) => l.replace("{}", x), this);
+});
 module.exports = "Ok!";

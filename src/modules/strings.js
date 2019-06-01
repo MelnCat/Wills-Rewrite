@@ -9,7 +9,7 @@ const strings = {
 		expired: "⌛ Sorry, your order expired. Please try ordering another.",
 		nonexistent: "❎ You currently do not have an order. Order one!",
 		channel: "📲 This command is not avaliable in this channel, please change the channel to <#{}>.",
-		url: "📷 The link is invalid.",
+		url: "📷 The link provided is invalid.",
 		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",
