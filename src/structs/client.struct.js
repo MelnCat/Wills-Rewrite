@@ -55,7 +55,7 @@ module.exports = class DiscordDonuts extends Client {
 				for (const [name, model] of Object.entries(sequelize.models)) {
 					this.cached[name] = await model.findAll();
 				}
-			});
+			}, 15000);
 		});
 	}
 	loadRoles() {
