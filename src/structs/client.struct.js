@@ -22,6 +22,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.statuses = ["with donuts."];
 		this.permissionFlags = this.strings.permissionFlags;
 		this.util = Util;
+		this.cached = {};
 		this.loadChannels();
 		this.loadRoles();
 		this.loadEmojis();
@@ -47,6 +48,14 @@ module.exports = class DiscordDonuts extends Client {
 				if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
 			}, 10000);
 			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000, this);
+		});
+		this.on("ready", () => {
+			const sequelize = this.getModule("sql");
+			this.databaseCacheInterval = setInterval(async() => {
+				for (const [name, model] of Object.entries(sequelize.models)) {
+					this.cached[name] = await model.findAll();
+				}
+			});
 		});
 	}
 	loadRoles() {
