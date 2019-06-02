@@ -3,7 +3,7 @@ const pms = require("pretty-ms");
 const bipms = (x, etc = {}) => pms(Number(x) / 1000000, { formatSubMs: true, ...etc });
 const { get } = require("r2");
 const { MessageEmbed } = require("discord.js");
-module.exports = new Command("ping", "Gets the bot latency.", 0)
+module.exports = new Command("ping", "Gets the bot latency.", "[simple]", 0)
 	.setFunction(async(client, message, args) => {
 		const { sequelize } = client.getModule("sql");
 

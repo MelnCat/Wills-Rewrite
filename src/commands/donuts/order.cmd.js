@@ -1,11 +1,11 @@
 const Command = require("../../structs/command.struct");
-module.exports = new Command("order", "Order a donut.", 0)
+module.exports = new Command("order", "Order a donut.", "{orderinfo:str}", 0)
 	.setFunction(async(client, message, args, now) => {
 		const orders = client.getModel("orders");
 		const { Op } = client.getModule("sql");
 		if (message.author.hasOrder) return message.channel.send(client.errors.ordered);
 		let description = args.join(" ");
-		if (!description) return message.channel.send(client.errors.arguments);
+		if (!description) await message.argError();
 		description = description.includes("donut") ? description : `${description} donut`;
 		description = description.replaceLast("donuts", "donut").valueOf();
 		try {

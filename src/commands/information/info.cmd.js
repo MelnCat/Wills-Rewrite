@@ -3,7 +3,7 @@ const pb = require("pretty-bytes");
 const { MessageEmbed, version } = require("discord.js");
 const os = require("os");
 const pms = require("pretty-ms");
-module.exports = new Command("info", "Get info about the bot.", 0)
+module.exports = new Command("info", "Get info about the bot.", "", 0)
 	.setAlias("botinfo")
 	.setFunction(async(client, message, args) => {
 		const embed = new MessageEmbed()

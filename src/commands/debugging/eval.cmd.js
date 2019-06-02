@@ -1,10 +1,10 @@
 const Command = require("../../structs/command.struct");
 
-module.exports = new Command("eval", "Eval javascript code.", 4)
+module.exports = new Command("eval", "Eval javascript code.", "{jscode:str}", 4)
 	.setFunction(async(client, message, args) => {
 		try {
 			let toEval = args.join(" ");
-			if (!toEval) return message.channel.send(client.errors.arguments);
+			if (!toEval) await message.argError();
 			let com = await eval(`(async () => {${toEval}})()`);
 			let type = "Unknown";
 			try {

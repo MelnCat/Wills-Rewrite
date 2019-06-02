@@ -1,5 +1,5 @@
 const Command = require("../../structs/command.struct");
-module.exports = new Command("cook", "Cook a donut.", 2)
+module.exports = new Command("cook", "Cook a donut.", "[order:str]", 2)
 	.setFunction(async(client, message, args, now) => {
 		const URLREGEX = /https?:\/\/.+?\.\w+/;
 		await message.channel.assert(client.mainChannels.kitchen.id);

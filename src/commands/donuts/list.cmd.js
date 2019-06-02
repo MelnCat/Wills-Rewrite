@@ -1,5 +1,5 @@
 const Command = require("../../structs/command.struct");
-module.exports = new Command("list", "List all donuts.", 2)
+module.exports = new Command("list", "List all donuts.", "", 2)
 	.setFunction(async(client, message, args, now) => {
 		const orders = client.getModel("orders");
 		const { Op } = client.getModule("sql");

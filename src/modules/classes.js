@@ -6,7 +6,8 @@ class GenericError extends Error {
 }
 class EndCommand extends GenericError {}
 exports.EndCommand = EndCommand;
-class WrongChannelError extends EndCommand {}
+class WrongChannelError extends EndCommand { }
+class IncorrectArgumentsError extends EndCommand { }
 exports.WrongChannelError = WrongChannelError;
 exports.ProgressBar = class ProgressBar {
 	constructor(min = 0, max = 100, filled = "▓", unfilled = "░") {

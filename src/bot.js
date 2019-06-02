@@ -2,10 +2,10 @@ const Client = require("./structs/client.struct");
 const client = require("./modules/client");
 const Discord = require("discord.js");
 const chalk = require("chalk");
-const strings = client.getModule("strings");
+const constants = client.getModule("constants");
 const { Op } = require("./modules/sql");
 const { models: { guildinfo, blacklist, orders }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
-const { errors } = strings;
+const { errors } = constants;
 Object.defineProperty(Error.prototype, "short", {
 	get() {
 		return `${this.name}: ${this.message}`;
@@ -67,7 +67,7 @@ client.on("message", async message => {
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
 		if (this.id !== id) {
-			this.send(client.errors.channel.format(id));
+			await this.send(client.errors.channel.format(id));
 			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
 		}
 	};
@@ -80,13 +80,18 @@ client.on("message", async message => {
 	message.content = message.content.replace(prefix, "").trim();
 	message.permissions = message.channel.permissionsFor(client.user.id).toArray();
 	const args = message.content.split(/\s+/);
+	message.arguments = args;
 	const command = args.shift();
+	message.argError = async function argError() {
+		await this.channel.send(client.errors.arguments.format(this.command.prefix, this.command.inputname, this.command.instance.syntax));
+		throw new client.classes.IncorrectArgumentsError(`Incorrect arguments for command ${this.command.name}.`);
+	};
 	// COMMAND INFO START
 	if (!client.getCommand(command)) return;
-	if (client.strings.permissionFlags.find(x => !message.permissions.includes(x))) {
+	if (client.constants.permissionFlags.find(x => !message.permissions.includes(x))) {
 		return message.channel.send(`Sorry, the command failed to process because I do not have enough permissions in this channel.
 I require the following permissions to be added:
-${client.strings.permissionFlags.filter(x => !message.permissions.includes(x)).map(x => `\`${x}\``).join(", ")}`);
+${client.constants.permissionFlags.filter(x => !message.permissions.includes(x)).map(x => `\`${x}\``).join(", ")}`);
 	}
 	try {
 		const gcommand = await client.getCommand(command);
@@ -94,7 +99,8 @@ ${client.strings.permissionFlags.filter(x => !message.permissions.includes(x)).m
 			onRecieved: process.hrtime.bigint(),
 			name: gcommand.name,
 			prefix,
-			inputName: command
+			inputName: command,
+			instance: gcommand
 		};
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
 		await gcommand.exec(client, message, args);
@@ -113,7 +119,7 @@ ${err.stack}
 */
 orders.afterCreate(async(order, options) => {
 	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
-	await order.update({ message: tm.id, expireFinish: Date.now() + client.strings.times.expire });
+	await order.update({ message: tm.id, expireFinish: Date.now() + client.constants.times.expire });
 	client.orders.push(order);
 });
 orders.beforeDestroy(async(order, options) => {
@@ -133,7 +139,7 @@ orders.beforeUpdate(async(order, options) => {
 		}
 		case 3: {
 			await client.mainChannels.delivery.send(`<@${order.claimer}>, order \`${order.id}\` has finished cooking and is ready to be delivered!`);
-			await order.update({ deliverFinish: Date.now() + client.strings.times.deliver });
+			await order.update({ deliverFinish: Date.now() + client.constants.times.deliver });
 			break;
 		}
 		case 4: {

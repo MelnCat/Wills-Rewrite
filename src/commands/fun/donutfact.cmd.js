@@ -1,14 +1,13 @@
 const Command = require("../../structs/command.struct");
 const { MessageEmbed } = require("discord.js");
 const { get } = require("r2");
-module.exports = new Command("donutfact", "Gets a list of all the commands.", 0)
+module.exports = new Command("donutfact", "Learn a cool fact about donuts!", "", 0)
 	.setAlias("fact")
 	.setFunction(async(client, message, args) => {
-		const facts = await (await get("https://discord-donuts-fact-submitter.glitch.me/facts")).json;
-		const random = Math.floor(Math.random() * facts.length);
+		const random = Math.floor(Math.random() * 1);
 		const embed = new MessageEmbed()
 			.setTitle("Donut Fact")
-			.setDescription(facts[random].fact)
-			.setFooter(`INDEX: ${random} | Do you want to submit a donut fact? Visit https://discord-donuts-fact-submitter.glitch.me/ !`);
+			.setDescription("TEMP_FACT") // todo
+			.setFooter(`INDEX: ${random} | Do you want to submit a donut fact? Visit mars!`);
 		return message.channel.send(embed);
 	});

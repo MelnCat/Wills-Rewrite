@@ -2,10 +2,11 @@ const Discord = require("discord.js");
 const perms = require("../modules/permissions");
 const { execPermission } = require("../modules/utils");
 module.exports = class Command {
-	constructor(name, description, permissions) {
+	constructor(name, description, syntax, permissions) {
 		this.name = name;
 		this.description = description;
 		this.permissions = permissions;
+		this.syntax = syntax;
 		this.aliases = [];
 		this.shortcuts = [];
 		this.hidden = false;

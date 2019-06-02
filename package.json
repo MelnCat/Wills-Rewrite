@@ -28,6 +28,7 @@
     "multipurpose-utils": "^1.0.4",
     "mysql2": "^1.6.4",
     "npm-api": "^0.4.12",
+    "owofy": "^0.3.0",
     "pretty-bytes": "^5.1.0",
     "pretty-ms": "^4.0.0",
     "r2": "^2.0.1",

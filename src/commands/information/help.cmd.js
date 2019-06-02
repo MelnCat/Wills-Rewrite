@@ -1,6 +1,6 @@
 const Command = require("../../structs/command.struct");
 const { MessageEmbed } = require("discord.js");
-module.exports = new Command("help", "Gets a list of all the commands.", 0)
+module.exports = new Command("help", "Gets a list of all the commands.", "", 0)
 	.setFunction(async(client, message, args) => {
 		const commands = client.commands.array()
 			.filter(x => x.execPermissions(client, message.member))

@@ -1,7 +1,7 @@
 const { db: { name, username, password, hostname } } = require("../auth");
 const Sequelize = require("sequelize");
 const { Op } = Sequelize;
-const { prefix } = require("./strings");
+const { prefix } = require("./constants");
 const sequelize = new Sequelize(name, username, password, {
 	host: hostname,
 	dialect: "mysql",

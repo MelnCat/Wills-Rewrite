@@ -5,6 +5,7 @@ const { MessageEmbed } = require("discord.js");
 const { promisify } = require("util");
 const { exec } = require("child_process");
 const p_exec = promisify(exec);
+require("./extensions");
 exports.hash = string => {
 	string = String(string);
 	var hash = 0, i, chr;
@@ -139,6 +140,7 @@ exports.getUser = async(message, args, { autoself = false, argn = 0, onlyargn = 
 			.filter(x => filter(x.user || x))
 			.array();
 		if (!userlist.length) return;
+		if (compareTwoStrings(selecting, userlist[0].tag) < 0.95) return userlist[0];
 		let names = userlist.map(x => x.tag).slice(0, 5);
 		const nameDict = await exports.getIndex(message, names, userlist, "user");
 		if (!nameDict) return;

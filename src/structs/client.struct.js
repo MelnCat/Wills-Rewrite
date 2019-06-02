@@ -13,14 +13,14 @@ module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
 		super({ disableEveryone: true, shardCount: shards });
 		this.loadCommands();
-		this.strings = this.getModule("strings");
+		this.constants = this.getModule("constants");
 		this.utils = this.getModule("utils");
 		this.classes = this.getModule("classes");
 		this.auth = require("../auth");
 		this.status = 0;
-		this.errors = this.strings.errors;
+		this.errors = this.constants.errors;
 		this.statuses = ["with donuts."];
-		this.permissionFlags = this.strings.permissionFlags;
+		this.permissionFlags = this.constants.permissionFlags;
 		this.util = Util;
 		this.cached = {};
 		this.loadChannels();
@@ -44,7 +44,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.on("ready", () => {
 			this.statusInterval = setInterval(() => {
 				if (!this.user.presence.activity) return;
-				if (this.status && this.user.presence.activity.name !== this.strings.cstatus[this.status]) this.user.setActivity(this.strings.cstatus[this.status]);
+				if (this.status && this.user.presence.activity.name !== this.constants.cstatus[this.status]) this.user.setActivity(this.constants.cstatus[this.status]);
 				if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
 			}, 10000);
 			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000, this);
@@ -61,7 +61,7 @@ module.exports = class DiscordDonuts extends Client {
 	loadRoles() {
 		this.mainRoles = {};
 		this.on("ready", async() => {
-			for (const [name, role] of Object.entries(this.strings.roles)) {
+			for (const [name, role] of Object.entries(this.constants.roles)) {
 				const r = this.mainGuild.roles.get(role);
 				if (!r) {
 					this.error(`Role ${chalk.blue(name)} was not found.`);
@@ -75,7 +75,7 @@ module.exports = class DiscordDonuts extends Client {
 	loadEmojis() {
 		this.mainEmojis = {};
 		this.on("ready", async() => {
-			for (const [name, emoji] of Object.entries(this.strings.emojis)) {
+			for (const [name, emoji] of Object.entries(this.constants.emojis)) {
 				const r = this.emojis.get(emoji);
 				if (!r) {
 					this.error(`Emoji ${chalk.red(name)} was not found.`);
@@ -89,7 +89,7 @@ module.exports = class DiscordDonuts extends Client {
 	loadChannels() {
 		this.mainChannels = {};
 		this.on("ready", async() => {
-			for (const [name, channel] of Object.entries(this.strings.channels)) {
+			for (const [name, channel] of Object.entries(this.constants.channels)) {
 				const chan = this.mainGuild.channels.get(channel);
 				if (!chan) {
 					if (this.channels.get(channel)) {
@@ -141,7 +141,7 @@ module.exports = class DiscordDonuts extends Client {
 		return this.utils.alert(this, string);
 	}
 	simplestatus(s) {
-		return this.strings.status[s];
+		return this.constants.status[s];
 	}
 	statusOf(order) {
 		const st = this.simplestatus(order.status);
@@ -172,7 +172,7 @@ module.exports = class DiscordDonuts extends Client {
 		}
 	}
 	get mainGuild() {
-		return this.guilds.get(this.strings.mainServer);
+		return this.guilds.get(this.constants.mainServer);
 	}
 	async getCommits() {
 		const v = await this.utils.execBash("git rev-list --no-merges --count HEAD");
