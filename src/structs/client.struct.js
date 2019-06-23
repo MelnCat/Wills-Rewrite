@@ -255,15 +255,15 @@ module.exports = class DiscordDonuts extends Client {
 		console.log(`${chalk.gray(this.timestamp())} ${str}`);
 	}
 	getModule(m) {
-		return require(`${__dirname}\\..\\modules\\${m}`);
+		return require(`${__dirname}/../modules/${m}`);
 	}
 	refreshAuth() {
 		delete require.cache[require.resolve("../auth")];
 		return require("../auth");
 	}
 	refreshModule(m) {
-		delete require.cache[require.resolve(`${__dirname}\\..\\modules\\${m}`)];
-		return require(`${__dirname}\\..\\modules\\${m}`);
+		delete require.cache[require.resolve(`${__dirname}/../modules/${m}`)];
+		return require(`${__dirname}/../modules/${m}`);
 	}
 	getModel(m) {
 		return this.getModule("sql").models[m];
