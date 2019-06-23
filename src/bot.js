@@ -6,30 +6,37 @@ const constants = client.getModule("constants");
 const { Op } = require("./modules/sql");
 const { models: { guildinfo, blacklist, orders, stocks }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
 const { errors } = constants;
+
 Object.defineProperty(Error.prototype, "short", {
 	get() {
 		return `${this.name}: ${this.message}`;
 	}
 });
+
 Object.defineProperty(Error.prototype, "shortcolors", {
 	get() {
 		return `${chalk.redBright(this.name)}: ${chalk.red(this.message)}`;
 	}
 });
+
 Object.defineProperty(Discord.GuildMember.prototype, "isEmployee", {
 	get() {
 		return this.roles.has(client.mainRoles.employee.id) && this.guild.id === client.mainGuild.id;
 	}
 });
+
 Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 	get() {
 		return `${this.displayName}#${this.user.discriminator}`;
 	}
 });
+
 client.log("Starting bot...");
+
 client.on("modelsLoaded", async() => {
 	client.orders = await orders.findAll();
 });
+
 client.on("ready", async() => {
 	await client.loadModels();
 	client.user.setActivity("Just started! Order donuts!");
@@ -39,27 +46,34 @@ client.on("ready", async() => {
 	client.log(`${chalk.cyanBright("Bot started!")} Logged in at ${chalk.bold(client.user.tag)}. ID: ${chalk.blue(client.user.id)}`);
 	client.log(`Currently in ${chalk.greenBright(client.guilds.size)} guild(s)!`);
 });
+
 client.on("guildMemberUpdate", async(oldM, newM) => {
 	if (oldM.isEmployee && !newM.isEmployee) {
 		client.emit("fire", newM);
 	}
+
 	if (!oldM.isEmployee && newM.isEmployee) {
 		client.emit("hire", newM);
 	}
 });
+
 client.on("guildMemberRemove", async member => {
 	if (member.isEmployee) client.emit("fire", member);
 });
+
 client.on("fire", member => {
 	client.log(`oh fuck, ${member.tag} is fired.`);
 });
+
 client.on("hire", member => {
 	client.log(`oh yay, ${member.tag} is hired.`);
 });
+
 client.on("messageUpdate", async(oldMessage, newMessage) => {
 	if (oldMessage.createdAt < Date.now() - 30000) return;
 	client.emit("message", newMessage);
 });
+
 client.on("message", async message => {
 	if (!client.started) return process.exit();
 	if (!message.guild) return;
@@ -71,21 +85,26 @@ client.on("message", async message => {
 			throw new client.classes.WrongChannelError(`Expected channel ${id} but instead got ${this.id}.`);
 		}
 	};
+
 	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
+
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
 	message.author.lastOrder = await orders.findOne({ where: { user: message.author.id }, order: [["createdAt", "DESC"]] });
 	const prefixes = [defaultPrefix, `<@${client.user.id}>`, `<@!${client.user.id}>`, message.guild.info.prefix];
 	const prefix = prefixes.find(x => message.content.startsWith(x));
 	if (!prefix) return;
+
 	message.content = message.content.replace(prefix, "").trim();
 	message.permissions = message.channel.permissionsFor(client.user.id).toArray();
 	const args = message.content.split(/\s+/);
 	message.arguments = args;
 	const command = args.shift();
+
 	message.argError = async function argError() {
 		await this.channel.send(client.errors.arguments.format(this.command.prefix, this.command.inputName, this.command.instance.syntax));
 		throw new client.classes.IncorrectArgumentsError(`Incorrect arguments for command ${this.command.name}.`);
 	};
+
 	// COMMAND INFO START
 	if (!client.getCommand(command)) return;
 	if (client.constants.permissionFlags.find(x => !message.permissions.includes(x))) {
@@ -93,6 +112,7 @@ client.on("message", async message => {
 I require the following permissions to be added:
 ${client.constants.permissionFlags.filter(x => !message.permissions.includes(x)).map(x => `\`${x}\``).join(", ")}`);
 	}
+
 	try {
 		const gcommand = await client.getCommand(command);
 		message.command = {
@@ -122,10 +142,12 @@ orders.afterCreate(async(order, options) => {
 	await order.update({ message: tm.id, expireFinish: Date.now() + client.constants.times.expire });
 	client.orders.push(order);
 });
+
 orders.beforeDestroy(async(order, options) => {
 	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
 	client.orders = client.orders.filter(x => x.id === order.id);
 });
+
 orders.beforeUpdate(async(order, options) => {
 	if (!options.fields.includes("status")) return;
 	if (!client.users.get(order.user)) return order.destroy();
@@ -170,6 +192,7 @@ Have a great day!
 		tm.edit(client.createTicket(order));
 	}
 });
+
 process.on("unhandledRejection", (err, p) => {
 	if (!process.extensionsLoaded) client.getModule("extensions");
 	if (err.name.equalsAny("TimeoutError", "SequelizeConnectionError")) {
