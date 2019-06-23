@@ -69,6 +69,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.on("ready", () => {
 			const sequelize = this.getModule("sql");
 			this.stockInterval = setInterval(async() => {
+				if (!this.cached.stocks) return;
 				const embed = new MessageEmbed()
 					.setTitle("📦 Ingredients In Stock 📦")
 					.setDescription("Ingredients are required to make donuts.")
@@ -78,6 +79,15 @@ module.exports = class DiscordDonuts extends Client {
 					embed.addField(`[${ingredient.id}] ${ingredient.emoji} ${ingredient.name}`, `${ingredient.count}/${ingredient.max} in stock.${ingredient.count / ingredient.max < 0.2 ? " Running low!" : ""}`);
 				}
 				await this.mainMessages.stocks.edit(embed);
+			}, 2000);
+		});
+		this.on("ready", () => {
+			const orders = this.getModel("orders");
+			const { Op } = this.getModule("sql");
+			this.orderInterval = setInterval(async() => {
+				await orders.update({ status: 3 }, { where: { cookFinish: { [Op.lt]: Date.now() }, status: 2 } });
+				await orders.update({ status: 6 }, { where: { expireFinish: { [Op.lt]: Date.now() }, status: 0 } });
+				await orders.update({ status: 4 }, { where: { deliverFinish: { [Op.lt]: Date.now() }, status: 3 } });
 			}, 2000);
 		});
 	}

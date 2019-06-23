@@ -139,6 +139,7 @@ orders.beforeUpdate(async(order, options) => {
 		}
 		case 3: {
 			await client.mainChannels.delivery.send(`<@${order.claimer}>, order \`${order.id}\` has finished cooking and is ready to be delivered!`);
+			await client.users.get(order.user).send(`Your order has finished cooking. A deliverer will shortly head over to your server and deliver your donut.`);
 			await order.update({ deliverFinish: Date.now() + client.constants.times.deliver });
 			break;
 		}
@@ -173,7 +174,7 @@ process.on("unhandledRejection", (err, p) => {
 	if (!process.extensionsLoaded) client.getModule("extensions");
 	if (err.name.equalsAny("TimeoutError", "SequelizeConnectionError")) {
 		client.status = 1;
-		return client.error(`Database failed to load.`);
+		return client.error(`${err.name}: Database failed to load.`);
 	}
 	client.error(err.stack);
 });

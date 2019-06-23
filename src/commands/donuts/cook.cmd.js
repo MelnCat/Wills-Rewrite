@@ -5,7 +5,7 @@ module.exports = new Command("cook", "Cook a donut.", "[order:str]", 2)
 		await message.channel.assert(client.mainChannels.kitchen.id);
 		const order = await client.utils.getOrder(message, args, 0, { is: 1 }, false, "cook");
 		if (!order) return;
-		await message.channel.send(`You are cooking order \`${order.id}\``);
+		await message.channel.send(`You are cooking order \`${order.id}\`.`);
 		let url;
 		if (args[1]) {
 			url = args[1];

@@ -5,6 +5,6 @@ module.exports = new Command("rush", "Finish cooking an order immediately.", "[o
 	.setFunction(async(client, message, args) => {
 		const order = await client.utils.getOrder(message, args, 0, { is: 2 }, false, "claim");
 		if (!order) return;
-		await order.update({ cookFinish: Date.now() });
+		await order.update({ cookFinish: new Date(0) });
 		return message.channel.send(`${order.id} has been rushed.`);
 	});
