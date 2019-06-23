@@ -1,4 +1,3 @@
-const dsp = require("./ddstr-parser");
 const constants = {
 	errors: {
 		internal: "🔌 Sorry! There was an error with this command. Please contact a developer.",
@@ -20,7 +19,6 @@ const constants = {
 			50013: "📝 I do not have enough permissions in this guild, so that command is unavaliable.\nTry adding some permissions.",
 		},
 	},
-	text: dsp("./english.ddstr"),
 	permissionFlags: [
 		"CREATE_INSTANT_INVITE",
 		"ADD_REACTIONS",
@@ -53,5 +51,8 @@ const constants = {
 		yes: "545049026366537761",
 		no: "545047514584317962",
 	},
+	messages: {
+		stocks: "#592126935765745743:592127113864413184"
+	}
 };
 module.exports = constants;

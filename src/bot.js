@@ -4,7 +4,7 @@ const Discord = require("discord.js");
 const chalk = require("chalk");
 const constants = client.getModule("constants");
 const { Op } = require("./modules/sql");
-const { models: { guildinfo, blacklist, orders }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
+const { models: { guildinfo, blacklist, orders, stocks }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
 const { errors } = constants;
 Object.defineProperty(Error.prototype, "short", {
 	get() {
@@ -83,7 +83,7 @@ client.on("message", async message => {
 	message.arguments = args;
 	const command = args.shift();
 	message.argError = async function argError() {
-		await this.channel.send(client.errors.arguments.format(this.command.prefix, this.command.inputname, this.command.instance.syntax));
+		await this.channel.send(client.errors.arguments.format(this.command.prefix, this.command.inputName, this.command.instance.syntax));
 		throw new client.classes.IncorrectArgumentsError(`Incorrect arguments for command ${this.command.name}.`);
 	};
 	// COMMAND INFO START

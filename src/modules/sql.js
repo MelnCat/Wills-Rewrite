@@ -95,5 +95,50 @@ exports.models = {
 			allowNull: false
 		}
 	}),
+	workerinfo: sequelize.define("workerinfos", {
+		id: {
+			type: Sequelize.SNOWFLAKE,
+			allowNull: false,
+			primaryKey: true
+		},
+	}),
+	stocks: sequelize.define("stocks", {
+		id: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+			primaryKey: true
+		},
+		max: {
+			type: Sequelize.INTEGER,
+			allowNull: false
+		},
+		count: {
+			type: Sequelize.INTEGER,
+			defaultValue: 0
+		},
+		name: {
+			type: Sequelize.TEXT,
+			allowNull: false
+		},
+		emoji: {
+			type: Sequelize.TEXT,
+			defaultValue: "⏹"
+		}
+	}),
+	donutTypes: sequelize.define("donutTypes", {
+		id: {
+			type: Sequelize.CHAR(255),
+			allowNull: false,
+			primaryKey: true
+		},
+		ingredients: {
+			type: Sequelize.JSON,
+			defaultValue: { 0: 20, 1: 1 }
+		},
+		name: {
+			type: Sequelize.TEXT,
+			allowNull: false
+		}
+	})
 };
 exports.Op = Op;

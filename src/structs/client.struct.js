@@ -26,6 +26,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.loadChannels();
 		this.loadRoles();
 		this.loadEmojis();
+		this.loadMessages();
 		this.loadIntervals();
 		this.started = true;
 	}
@@ -42,7 +43,15 @@ module.exports = class DiscordDonuts extends Client {
 	}
 	loadIntervals() {
 		this.on("ready", () => {
-			this.statusInterval = setInterval(() => {
+			this.statusInterval = setInterval(async() => {
+				if (this.status === 1) {
+					try {
+						await this.getModule("sql").authenticate();
+						this.status = 0;
+					} catch (err) {
+						// do nothing
+					}
+				}
 				if (!this.user.presence.activity) return;
 				if (this.status && this.user.presence.activity.name !== this.constants.cstatus[this.status]) this.user.setActivity(this.constants.cstatus[this.status]);
 				if (!this.status && Math.floor(Math.random() * 50) === 34) this.user.setActivity(this.statuses.random());
@@ -55,7 +64,21 @@ module.exports = class DiscordDonuts extends Client {
 				for (const [name, model] of Object.entries(sequelize.models)) {
 					this.cached[name] = await model.findAll();
 				}
-			}, 15000);
+			}, 1000);
+		});
+		this.on("ready", () => {
+			const sequelize = this.getModule("sql");
+			this.stockInterval = setInterval(async() => {
+				const embed = new MessageEmbed()
+					.setTitle("📦 Ingredients In Stock 📦")
+					.setDescription("Ingredients are required to make donuts.")
+					.setFooter("Run d!restock to restock ingredients!")
+					.setTimestamp();
+				for (const ingredient of this.cached.stocks) {
+					embed.addField(`[${ingredient.id}] ${ingredient.emoji} ${ingredient.name}`, `${ingredient.count}/${ingredient.max} in stock.${ingredient.count / ingredient.max < 0.2 ? " Running low!" : ""}`);
+				}
+				await this.mainMessages.stocks.edit(embed);
+			}, 2000);
 		});
 	}
 	loadRoles() {
@@ -102,6 +125,30 @@ module.exports = class DiscordDonuts extends Client {
 				}
 				this.mainChannels[name] = chan;
 				this.log(`Channel ${chalk.green(name)} was loaded!`);
+			}
+		});
+	}
+	loadMessages() {
+		this.mainMessages = {};
+		this.on("ready", async() => {
+			for (const [name, entry] of Object.entries(this.constants.messages)) {
+				if (!entry.match(/^#\d+:\d+$/)) {
+					this.error(`Message ${chalk.magenta(name)} was not the correct format.`);
+					continue;
+				}
+				const [channel, message] = [entry.match(/(?<=#)\d+/)[0], entry.match(/(?<=:)\d+/)[0]];
+				const chan = this.channels.get(channel);
+				if (!chan) {
+					this.error(`Channel for message ${chalk.magenta(name)} was not found.`);
+					continue;
+				}
+				const msg = await chan.messages.fetch(message);
+				if (!msg) {
+					this.error(`Message ${chalk.magenta(name)} was not found.`);
+					continue;
+				}
+				this.mainMessages[name] = msg;
+				this.log(`Message ${chalk.red(name)} was loaded!`);
 			}
 		});
 	}

@@ -159,3 +159,13 @@ exports.execPermission = (id, member) => {
 	}
 	return false;
 };
+exports.UWUfy = val => {
+	const prce = n => n;
+	for (const [k, v] of Object.entries(val)) {
+		let nv = v;
+		if (v instanceof Object) nv = prce(v);
+		else if (typeof v === "string") nv = process(v);
+		else nv = v;
+		val[k] = nv;
+	}
+};

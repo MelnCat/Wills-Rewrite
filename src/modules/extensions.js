@@ -49,12 +49,7 @@ define(String, "replaceAll", function replaceAll(search, replacement) {
 	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement));
 });
 define(String, "bulkReplace", function bulkReplace(replacer) {
-	// eslint-disable-next-line consistent-this
-	let res = this;
-	for (const x in replacer) {
-		res = res.replaceAll(x, replacer[x]);
-	}
-	return res;
+	return Object.entries(replacer).reduce((l, c) => l.replaceAll(...c), this);
 });
 define(String, "replaceAsync", async function replaceAsync(replacer, replaceFunc) {
 	const promises = [];
