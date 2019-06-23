@@ -1,15 +1,15 @@
 const constants = {
 	errors: {
-		internal: "🔌 Sorry! There was an error with this command. Please contact a developer.",
-		blacklisted: "📜 Sorry! You have been blacklisted from the bot. You may not run commands.",
-		permissions: "📚 You do not have permission to run this command.",
+		internal: "🔌 There seems to be an issue with this command. Please contact a bot developer if this issue persists.",
+		blacklisted: "📜 Blacklisted users are not permitted to utilize any commands.",
+		permissions: "📚 You do not have clearance to issue this command.",
 		arguments: "✏ Please ensure that you have supplied proper arguments.\nCommand Format: `{}{} {}`",
-		ordered: "🖥 You already have an order!",
+		ordered: "🖥 You currently have an existing order.",
 		dms: "✉ I was unable to DM you. Please try enabling DMs.",
 		expired: "⌛ Sorry, your order expired. Please try ordering another.",
-		nonexistent: "❎ You currently do not have an order. Order one!",
-		channel: "📲 This command is not avaliable in this channel, please change the channel to <#{}>.",
-		url: "📷 The link provided is invalid.",
+		nonexistent: "❎ You currently do not have an order, why not try ordering one?",
+		channel: "📲 This command is not avaliable in this channel. Please change the channel to <#{}>.",
+		url: "📷 Invalid link argument provided.",
 		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",

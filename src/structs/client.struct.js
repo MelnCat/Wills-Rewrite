@@ -9,6 +9,7 @@ const { inspect } = require("util");
 const { token } = require("../auth");
 const { basename, dirname, resolve } = require("path");
 const Command = require("./command.struct");
+
 module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
 		super({ disableEveryone: true, shardCount: shards });
@@ -30,6 +31,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.loadIntervals();
 		this.started = true;
 	}
+
 	async loadModels() {
 		const { models } = this.getModule("sql");
 		for (const [mname, model] of Object.entries(models)) {
@@ -41,6 +43,7 @@ module.exports = class DiscordDonuts extends Client {
 		}
 		this.emit("modelsLoaded");
 	}
+
 	loadIntervals() {
 		this.on("ready", () => {
 			this.statusInterval = setInterval(async() => {
@@ -58,6 +61,7 @@ module.exports = class DiscordDonuts extends Client {
 			}, 10000);
 			this.checkOrderInterval = setInterval(this.utils.checkOrders, 12000, this);
 		});
+
 		this.on("ready", () => {
 			const sequelize = this.getModule("sql");
 			this.databaseCacheInterval = setInterval(async() => {
@@ -66,6 +70,7 @@ module.exports = class DiscordDonuts extends Client {
 				}
 			}, 1000);
 		});
+
 		this.on("ready", () => {
 			const sequelize = this.getModule("sql");
 			this.stockInterval = setInterval(async() => {
@@ -81,6 +86,7 @@ module.exports = class DiscordDonuts extends Client {
 				await this.mainMessages.stocks.edit(embed);
 			}, 2000);
 		});
+
 		this.on("ready", () => {
 			const orders = this.getModel("orders");
 			const { Op } = this.getModule("sql");
@@ -91,6 +97,7 @@ module.exports = class DiscordDonuts extends Client {
 			}, 2000);
 		});
 	}
+
 	loadRoles() {
 		this.mainRoles = {};
 		this.on("ready", async() => {
@@ -105,6 +112,7 @@ module.exports = class DiscordDonuts extends Client {
 			}
 		});
 	}
+
 	loadEmojis() {
 		this.mainEmojis = {};
 		this.on("ready", async() => {
@@ -119,6 +127,7 @@ module.exports = class DiscordDonuts extends Client {
 			}
 		});
 	}
+
 	loadChannels() {
 		this.mainChannels = {};
 		this.on("ready", async() => {
@@ -138,6 +147,7 @@ module.exports = class DiscordDonuts extends Client {
 			}
 		});
 	}
+
 	loadMessages() {
 		this.mainMessages = {};
 		this.on("ready", async() => {
@@ -162,9 +172,11 @@ module.exports = class DiscordDonuts extends Client {
 			}
 		});
 	}
+
 	static getShards(guildCount) {
 		return Util.fetchRecommendedShards(token, guildCount);
 	}
+
 	createTicket(order) {
 		const guild = this.channels.get(order.channel).guild;
 		return new MessageEmbed()
@@ -194,20 +206,25 @@ module.exports = class DiscordDonuts extends Client {
 `)
 			.addField("💻 Status", this.statusOf(order));
 	}
+
 	alert(string) {
 		return this.utils.alert(this, string);
 	}
+
 	simplestatus(s) {
 		return this.constants.status[s];
 	}
+
 	statusOf(order) {
 		const st = this.simplestatus(order.status);
 		const cl = this.users.get(order.claimer);
 		return `${st}${order.status === 1 ? ` by ${cl.tag}` : ""}`;
 	}
+
 	reloadCommands() {
 		this.loadCommands();
 	}
+
 	loadCommands() {
 		this.commands = new Collection();
 		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => {
@@ -228,54 +245,68 @@ module.exports = class DiscordDonuts extends Client {
 			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}
 	}
+
 	get mainGuild() {
 		return this.guilds.get(this.constants.mainServer);
 	}
+	
 	async getCommits() {
 		const v = await this.utils.execBash("git rev-list --no-merges --count HEAD");
 		if (isNaN(v)) return "???";
 		return v.trim();
 	}
+
 	async getVersion() {
 		const v = await this.getCommits();
 		return v.padStart(3, 0).splitEnd(2).join(".");
 	}
+
 	getMainChannel(channelResolvable) {
 		if (this.auth.channels[channelResolvable]) channelResolvable = this.auth.channels[channelResolvable];
 		return this.getMainGuild().channels.get(channelResolvable);
 	}
+
 	getMainMember(id) {
 		return this.mainGuild.members.get(id);
 	}
+
 	timestamp() {
 		return `[${timestamp()}]`;
 	}
+
 	log(str) {
 		if (str instanceof Object) str = inspect(str, true, null, true);
 		console.log(`${chalk.gray(this.timestamp())} ${str}`);
 	}
+
 	getModule(m) {
 		return require(`${__dirname}\\..\\modules\\${m}`);
 	}
+
 	refreshAuth() {
 		delete require.cache[require.resolve("../auth")];
 		return require("../auth");
 	}
+	
 	refreshModule(m) {
 		delete require.cache[require.resolve(`${__dirname}\\..\\modules\\${m}`)];
 		return require(`${__dirname}\\..\\modules\\${m}`);
 	}
+
 	getModel(m) {
 		return this.getModule("sql").models[m];
 	}
+	
 	warn(str) {
 		if (str instanceof Object) str = inspect(str, true, null, true);
 		console.warn(`${chalk.yellowBright(this.timestamp())} ${str}`);
 	}
+
 	error(str) {
 		if (str instanceof Object) str = inspect(str, true, null, true);
 		console.error(`${chalk.redBright(this.timestamp())} ${str}`);
 	}
+	
 	getCommand(commandResolvable) {
 		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (compareTwoStrings(str, commandResolvable) > 0.85))) || null;
 	}

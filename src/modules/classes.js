@@ -4,12 +4,16 @@ class GenericError extends Error {
 		this.name = this.constructor.name;
 	}
 }
+
 class EndCommand extends GenericError {}
 exports.EndCommand = EndCommand;
+
 class WrongChannelError extends EndCommand { }
 exports.WrongChannelError = WrongChannelError;
+
 class IncorrectArgumentsError extends EndCommand { }
 exports.IncorrectArgumentsError = IncorrectArgumentsError;
+
 exports.ProgressBar = class ProgressBar {
 	constructor(min = 0, max = 100, filled = "▓", unfilled = "░") {
 		this.min = min;
@@ -17,6 +21,7 @@ exports.ProgressBar = class ProgressBar {
 		this.filled = filled;
 		this.unfilled = unfilled;
 	}
+
 	generate(progress = this.max / 2, { percent = false, decimals = 0, prefix = "", total = this.max } = {}) {
 		if (progress < 0) progress = 0;
 		let s = progress * (total / this.max);
@@ -31,18 +36,22 @@ exports.ProgressBar = class ProgressBar {
 		if (percent) e = ` ${((progress / this.max) * 100).toFixed(decimals)}%`;
 		return `${p}${f}${u}${e}`;
 	}
+
 	setMin(m) {
 		this.min = m;
 		return this;
 	}
+
 	setMax(m) {
 		this.max = m;
 		return this;
 	}
+
 	setFilled(f) {
 		this.filled = f;
 		return this;
 	}
+	
 	setUnfilled(u) {
 		this.unfilled = u;
 		return this;
