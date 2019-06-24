@@ -79,6 +79,7 @@ module.exports = class DiscordDonuts extends Client {
 					.setTitle("📦 Ingredients In Stock 📦")
 					.setDescription("Ingredients are required to make donuts.")
 					.setFooter("Run d!restock to restock ingredients!")
+					.setThumbnail("https://i.kym-cdn.com/photos/images/original/001/262/983/2f0.png")
 					.setTimestamp();
 				for (const ingredient of this.cached.stocks) {
 					embed.addField(`[${ingredient.id}] ${ingredient.emoji} ${ingredient.name}`, `${ingredient.count}/${ingredient.max} in stock.${ingredient.count / ingredient.max < 0.2 ? " Running low!" : ""}`);
@@ -249,7 +250,7 @@ module.exports = class DiscordDonuts extends Client {
 	get mainGuild() {
 		return this.guilds.get(this.constants.mainServer);
 	}
-	
+
 	async getCommits() {
 		const v = await this.utils.execBash("git rev-list --no-merges --count HEAD");
 		if (isNaN(v)) return "???";
@@ -287,7 +288,7 @@ module.exports = class DiscordDonuts extends Client {
 		delete require.cache[require.resolve("../auth")];
 		return require("../auth");
 	}
-	
+
 	refreshModule(m) {
 		delete require.cache[require.resolve(`${__dirname}/../modules/${m}`)];
 		return require(`${__dirname}/../modules/${m}`);
@@ -296,7 +297,7 @@ module.exports = class DiscordDonuts extends Client {
 	getModel(m) {
 		return this.getModule("sql").models[m];
 	}
-	
+
 	warn(str) {
 		if (str instanceof Object) str = inspect(str, true, null, true);
 		console.warn(`${chalk.yellowBright(this.timestamp())} ${str}`);
@@ -306,7 +307,7 @@ module.exports = class DiscordDonuts extends Client {
 		if (str instanceof Object) str = inspect(str, true, null, true);
 		console.error(`${chalk.redBright(this.timestamp())} ${str}`);
 	}
-	
+
 	getCommand(commandResolvable) {
 		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (compareTwoStrings(str, commandResolvable) > 0.85))) || null;
 	}
