@@ -51,7 +51,7 @@ exports.ProgressBar = class ProgressBar {
 		this.filled = f;
 		return this;
 	}
-	
+
 	setUnfilled(u) {
 		this.unfilled = u;
 		return this;

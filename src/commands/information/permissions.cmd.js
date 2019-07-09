@@ -5,7 +5,7 @@ const { get } = require("r2");
 const { MessageEmbed } = require("discord.js");
 module.exports = new Command("permissions", "Check your own bot permissions.", "[user:user]", 0)
 	.setAlias("perms")
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		const user = await client.utils.getUser(message, args, 0, true, true, u => message.guild.members.get(u.id));
 		const member = message.guild.members.get(user.id);
 		const permissions = Object.values(client.getModule("permissions")).map((x, i) => [client.constants.permissions[i], i]);

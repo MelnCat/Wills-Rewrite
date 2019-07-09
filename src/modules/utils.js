@@ -1,23 +1,25 @@
 const { models: { orders }, Op } = require("../modules/sql");
 const perms = require("../modules/permissions");
 const { findBestMatch, compareTwoStrings } = require("string-similarity");
+const parseTime = require("parse-duration");
+const { set: setObject } = require("lodash");
 const { MessageEmbed } = require("discord.js");
 const { promisify } = require("util");
 const { exec } = require("child_process");
 const p_exec = promisify(exec);
 require("./extensions");
+exports.setObject = setObject;
 exports.hash = string => {
 	string = String(string);
-	var hash = 0, i, chr;
-	if (string.length === 0) return hash;
+	let hash = 0;
 	for (const char of string) {
-		chr = char.charCodeAt(0);
-		hash = ((hash << 5) - hash) + chr;
+		hash = ((hash << 5) - hash) + char.charCodeAt(0);
 		hash |= 0;
 	}
 	return hash;
 };
 const moment = require("moment-timezone");
+exports.parseTime = parseTime;
 exports.timestamp = () => `${moment().tz("Canada/Pacific").format("DD-MM-YY hh:mm:ss z")}`;
 exports.random = Math.random;
 exports.random.seed = seed => {

@@ -1,3 +1,15 @@
+const parser = require("./ddconst");
+const fs = require("fs");
+const languages = {};
+const glob = require("glob");
+const { resolve, basename } = require("path");
+const languageFiles = glob.sync("./src/languages/*.ddconst").map(file => {
+	delete require.cache[resolve(file)];
+	return [basename(`${file}`, ".ddconst"), fs.readFileSync(`${file}`, { encoding: "utf8" })];
+});
+for (const [name, lang] of languageFiles) {
+	languages[name] = parser(lang);
+}
 const constants = {
 	errors: {
 		internal: "🔌 There seems to be an issue with this command. Please contact a bot developer if this issue persists.",
@@ -19,6 +31,7 @@ const constants = {
 			50013: "📝 I do not have enough permissions in this guild, so that command is unavaliable.\nTry adding some permissions.",
 		},
 	},
+	languages,
 	permissionFlags: [
 		"CREATE_INSTANT_INVITE",
 		"ADD_REACTIONS",
@@ -52,7 +65,7 @@ const constants = {
 		no: "545047514584317962",
 	},
 	messages: {
-		stocks: "#592126935765745743:592127113864413184"
+		stocks: "#592126935765745743:598026017424146443"
 	}
 };
 module.exports = constants;

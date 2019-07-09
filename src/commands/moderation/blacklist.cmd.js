@@ -2,7 +2,7 @@ const Command = require("../../structs/command.struct");
 
 
 module.exports = new Command("blacklist", "Blacklist commands.", "{method:str} {id:str}", 3)
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		const blacklists = client.getModel("blacklists");
 		const { Op } = client.getModule("sql");
 		if (!args[1] || isNaN(args[1])) return message.channel.send(client.constants.invalidID);

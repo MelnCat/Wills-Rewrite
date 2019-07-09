@@ -1,7 +1,7 @@
 const Command = require("../../structs/command.struct");
 
 module.exports = new Command("eval", "Eval javascript code.", "{jscode:str}", 4)
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		try {
 			let toEval = args.join(" ");
 			if (!toEval) await message.argError();

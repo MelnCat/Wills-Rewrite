@@ -34,7 +34,7 @@ Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 client.log("Starting bot...");
 
 client.on("modelsLoaded", async() => {
-	client.orders = await orders.findAll();
+	// something
 });
 
 client.on("ready", async() => {
@@ -123,7 +123,7 @@ ${client.constants.permissionFlags.filter(x => !message.permissions.includes(x))
 			instance: gcommand
 		};
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
-		await gcommand.exec(client, message, args);
+		await gcommand.exec(client, message, args, client.constants.languages[message.guild.info.language]);
 	} catch (err) {
 		if (err instanceof client.classes.EndCommand) return;
 		await message.channel.send(client.errors.codes[err.code] || `${errors.internal}
@@ -140,12 +140,10 @@ ${err.stack}
 orders.afterCreate(async(order, options) => {
 	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
 	await order.update({ message: tm.id, expireFinish: Date.now() + client.constants.times.expire });
-	client.orders.push(order);
 });
 
 orders.beforeDestroy(async(order, options) => {
 	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
-	client.orders = client.orders.filter(x => x.id === order.id);
 });
 
 orders.beforeUpdate(async(order, options) => {
@@ -191,6 +189,10 @@ Have a great day!
 		if (!tm || !tm.edit) return order.destroy();
 		tm.edit(client.createTicket(order));
 	}
+});
+
+orders.beforeBulkUpdate(async options => {
+	options.individualHooks = true;
 });
 
 process.on("unhandledRejection", (err, p) => {

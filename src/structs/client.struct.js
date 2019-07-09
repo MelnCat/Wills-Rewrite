@@ -135,11 +135,6 @@ module.exports = class DiscordDonuts extends Client {
 			for (const [name, channel] of Object.entries(this.constants.channels)) {
 				const chan = this.mainGuild.channels.get(channel);
 				if (!chan) {
-					if (this.channels.get(channel)) {
-						this.error(`Channel ${chalk.magenta(name)} was not found in the main guild\
-, but it was instead found in the guild ${chalk.blue(this.channels.get(channel).guild.name)}.`);
-						continue;
-					}
 					this.error(`Channel ${chalk.magenta(name)} was not found.`);
 					continue;
 				}
@@ -194,18 +189,11 @@ module.exports = class DiscordDonuts extends Client {
 	embed(title, description, data) {
 		return new MessageEmbed({ title, description, ...data });
 	}
-	customTicket(order, text = "No text specified.") {
+	customTicket(order, text = "No text specified.", title = "Ticket") {
 		const guild = this.channels.get(order.channel).guild;
-		return new MessageEmbed()
-			.setTitle("Ticket")
-			.setDescription(text)
-			.addField("🆔 ID", `\`${order.id}\``)
-			.addField("📄 Description", order.description)
-			.addField("ℹ Details", `**Customer**: ${this.users.get(order.user).tag} (${order.user})
-**Channel**: #${this.channels.get(order.channel).name} (${order.channel})
-**Guild**: ${guild.name} (${guild.id})
-`)
-			.addField("💻 Status", this.statusOf(order));
+		return this.createTicket(order)
+			.setTitle(title)
+			.setDescription(text);
 	}
 
 	alert(string) {
@@ -219,7 +207,8 @@ module.exports = class DiscordDonuts extends Client {
 	statusOf(order) {
 		const st = this.simplestatus(order.status);
 		const cl = this.users.get(order.claimer);
-		return `${st}${order.status === 1 ? ` by ${cl.tag}` : ""}`;
+
+		return `${st}${order.status === 1 ? ` by ${cl.tag}` : ""}${order.status === 0 ? order.prepared ? ", prepared" : ", unprepared" : ""}`;
 	}
 
 	reloadCommands() {

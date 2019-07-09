@@ -6,7 +6,6 @@ const sequelize = new Sequelize(name, username, password, {
 	host: hostname,
 	dialect: "mysql",
 	logging: false,
-	operatorsAliases: false,
 
 	define: {
 		charset: "utf32",
@@ -30,6 +29,10 @@ exports.models = {
 			type: Sequelize.TEXT,
 			defaultValue: prefix
 		},
+		language: {
+			type: Sequelize.TEXT,
+			defaultValue: "english"
+		}
 	}),
 	blacklist: sequelize.define("blacklists", {
 		id: {
@@ -47,6 +50,14 @@ exports.models = {
 		user: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false
+		},
+		type: {
+			type: Sequelize.INTEGER,
+			defaultValue: 1
+		},
+		prepared: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false
 		},
 		description: {
 			type: Sequelize.TEXT,
@@ -67,11 +78,7 @@ exports.models = {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false
 		},
-		tipped: {
-			type: Sequelize.BOOLEAN,
-			defaultValue: false
-		},
-		rated: {
+		feedbacked: {
 			type: Sequelize.BOOLEAN,
 			defaultValue: false
 		},

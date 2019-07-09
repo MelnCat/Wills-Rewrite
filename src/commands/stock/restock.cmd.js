@@ -2,7 +2,7 @@ const Command = require("../../structs/command.struct");
 
 
 module.exports = new Command("restock", "Restock an ingredient!", "{ingredientID:int}", 2)
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		const ingredients = client.getModel("stocks");
 		if (isNaN(args[0]) || typeof args[0] === "undefined") await message.argError();
 		args[0] = Number(args[0]);

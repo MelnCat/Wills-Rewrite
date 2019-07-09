@@ -1,6 +1,6 @@
 const Command = require("../../structs/command.struct");
 module.exports = new Command("sql", "Run SQL.", "{sqlcode:str}", 4)
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		const { sequelize } = client.getModule("sql");
 		const toRun = args.join(" ");
 		if (!toRun) await message.argError();

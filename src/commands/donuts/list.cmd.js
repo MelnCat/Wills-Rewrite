@@ -1,6 +1,6 @@
 const Command = require("../../structs/command.struct");
 module.exports = new Command("list", "List all donuts.", "", 2)
-	.setFunction(async(client, message, args, now) => {
+	.setFunction(async(client, message, args, strings) => {
 		const orders = client.getModel("orders");
 		const { Op } = client.getModule("sql");
 		const list = await orders.findAll({ where: { status: { [Op.lt]: 4 } } });

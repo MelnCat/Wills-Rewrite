@@ -4,7 +4,7 @@ const bipms = (x, etc = {}) => pms(Number(x) / 1000000, { formatSubMs: true, ...
 const { get } = require("r2");
 const { MessageEmbed } = require("discord.js");
 module.exports = new Command("ping", "Gets the bot latency.", "[simple]", 0)
-	.setFunction(async(client, message, args) => {
+	.setFunction(async(client, message, args, strings) => {
 		const { sequelize } = client.getModule("sql");
 
 		if (args[0] && args[0].toLowerCase() === "simple") {
