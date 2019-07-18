@@ -112,6 +112,8 @@ client.on("message", async message => {
 I require the following permissions to be added:
 ${client.constants.permissionFlags.filter(x => !message.permissions.includes(x)).map(x => `\`${x}\``).join(", ")}`);
 	}
+	let strings = client.constants.languages[message.guild.info.language];
+	if (!strings) strings = client.constants.languages.english;
 
 	try {
 		const gcommand = await client.getCommand(command);
@@ -123,7 +125,7 @@ ${client.constants.permissionFlags.filter(x => !message.permissions.includes(x))
 			instance: gcommand
 		};
 		if (!gcommand.execPermissions(client, message.member)) return message.channel.send(client.errors.permissions);
-		await gcommand.exec(client, message, args, client.constants.languages[message.guild.info.language]);
+		await gcommand.exec(client, message, args, strings);
 	} catch (err) {
 		if (err instanceof client.classes.EndCommand) return;
 		await message.channel.send(client.errors.codes[err.code] || `${errors.internal}
@@ -147,6 +149,16 @@ orders.beforeDestroy(async(order, options) => {
 });
 
 orders.beforeUpdate(async(order, options) => {
+	if (order.status > 3) {
+		if (await client.mainChannels.ticket.messages.fetch(order.message)) {
+			const tm = await client.mainChannels.ticket.messages.fetch(order.message);
+			await tm.delete();
+		}
+	} else {
+		const tm = await client.mainChannels.ticket.messages.fetch(order.message);
+		if (!tm || !tm.edit) return order.destroy();
+		tm.edit(client.createTicket(order));
+	}
 	if (!options.fields.includes("status")) return;
 	if (!client.users.get(order.user)) return order.destroy();
 	if (!client.channels.get(order.channel)) return order.destroy();
@@ -179,16 +191,6 @@ Have a great day!
 			break;
 		}
 	}
-	if (order.status > 3) {
-		if (await client.mainChannels.ticket.messages.fetch(order.message)) {
-			const tm = await client.mainChannels.ticket.messages.fetch(order.message);
-			await tm.delete();
-		}
-	} else {
-		const tm = await client.mainChannels.ticket.messages.fetch(order.message);
-		if (!tm || !tm.edit) return order.destroy();
-		tm.edit(client.createTicket(order));
-	}
 });
 
 orders.beforeBulkUpdate(async options => {
@@ -199,7 +201,7 @@ process.on("unhandledRejection", (err, p) => {
 	if (!process.extensionsLoaded) client.getModule("extensions");
 	if (err.name.equalsAny("TimeoutError", "SequelizeConnectionError")) {
 		client.status = 1;
-		return client.error(`${err.name}: Database failed to load.`);
+		return client.error(err);
 	}
 	client.error(err.stack);
 });

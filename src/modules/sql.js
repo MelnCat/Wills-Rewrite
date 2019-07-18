@@ -1,4 +1,4 @@
-const { db: { name, username, password, hostname } } = require("../auth");
+const { db: { name, username, password, hostname, port } } = require("../auth");
 const Sequelize = require("sequelize");
 const { Op } = Sequelize;
 const { prefix } = require("./constants");
@@ -6,7 +6,7 @@ const sequelize = new Sequelize(name, username, password, {
 	host: hostname,
 	dialect: "mysql",
 	logging: false,
-
+	port,
 	define: {
 		charset: "utf32",
 		dialectOptions: {

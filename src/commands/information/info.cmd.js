@@ -6,7 +6,7 @@ const pms = require("pretty-ms");
 module.exports = new Command("info", "Get info about the bot.", "", 0)
 	.setAlias("botinfo")
 	.setFunction(async(client, message, args, strings) => {
-		const embed = new MessageEmbed()
+		const embed = new client.MessageEmbed()
 			.setTitle("Bot Information")
 			.setDescription("Information about the bot!")
 			.addField("Operating System", process.platform, true)

@@ -1,5 +1,5 @@
 const Command = require("../../structs/command.struct");
-const { MessageEmbed } = require("discord.js");
+
 module.exports = new Command("help", "Gets a list of all the commands.", "", 0)
 	.setFunction(async(client, message, args, strings) => {
 		const commands = client.commands.array()
@@ -10,7 +10,7 @@ module.exports = new Command("help", "Gets a list of all the commands.", "", 0)
 		let i = 0;
 		for (const cmds of chunked) {
 			i++;
-			const embed = new MessageEmbed()
+			const embed = new client.MessageEmbed()
 				.setTitle("Command List")
 				.setDescription(`Page ${i} of ${chunked.length}.`);
 			for (const cmd of cmds) {

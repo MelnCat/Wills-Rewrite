@@ -24,6 +24,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.permissionFlags = this.constants.permissionFlags;
 		this.util = Util;
 		this.cached = {};
+		this.MessageEmbed = MessageEmbed;
 		this.loadChannels();
 		this.loadRoles();
 		this.loadEmojis();

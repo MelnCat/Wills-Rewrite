@@ -37,7 +37,7 @@ module.exports = class Command {
 	exec(client, message = new Discord.Message, args = []) {
 		return message.channel.send("No function has been set for this command.");
 	}
-	
+
 	execPermissions(client, member = new Discord.GuildMember) {
 		return execPermission(this.permissions, member);
 	}

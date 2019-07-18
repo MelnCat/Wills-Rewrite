@@ -2,7 +2,7 @@ const Command = require("../../structs/command.struct");
 const pms = require("pretty-ms");
 const bipms = (x, etc = {}) => pms(Number(x) / 1000000, { formatSubMs: true, ...etc });
 const { get } = require("r2");
-const { MessageEmbed } = require("discord.js");
+
 module.exports = new Command("ping", "Gets the bot latency.", "[simple]", 0)
 	.setFunction(async(client, message, args, strings) => {
 		const { sequelize } = client.getModule("sql");
@@ -37,7 +37,7 @@ module.exports = new Command("ping", "Gets the bot latency.", "[simple]", 0)
 		await require("discord.js");
 		delays.module = calc(4);
 
-		const embed = new MessageEmbed({
+		const embed = new client.MessageEmbed({
 			title: "🏓 Ping calculated! 🏓",
 			color: Math.floor(Date.now() / 1000) % 16777216,
 			footer: `API Status: ${APIstatus}`,

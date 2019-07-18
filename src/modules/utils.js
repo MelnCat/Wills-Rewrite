@@ -84,6 +84,10 @@ exports.execBash = async str => {
 	return res.join("\n");
 };
 exports.getIndex = async(message, list, internal = list.map((x, i) => x === null ? list[i] : x), display = "item") => {
+	if (internal.length < 2) {
+		await message.channel.send(`\`${list[0]}\` has been automatically chosen, as it is the only option.`);
+		return { index: 0, item: internal[0], displayItem: list[0] }
+	}
 	const mapped = list.map((x, i) => `[${i + 1}] ${x}`);
 	const index = await exports.getText(message, `Please reply with the index of the ${display}.
 \`\`\`ini
@@ -142,7 +146,7 @@ exports.getUser = async(message, args, { autoself = false, argn = 0, onlyargn = 
 			.filter(x => filter(x.user || x))
 			.array();
 		if (!userlist.length) return;
-		if (compareTwoStrings(selecting, userlist[0].tag) < 0.95) return userlist[0];
+		if (compareTwoStrings(selecting, userlist[0].tag) < 0.9) return userlist[0];
 		let names = userlist.map(x => x.tag).slice(0, 5);
 		const nameDict = await exports.getIndex(message, names, userlist, "user");
 		if (!nameDict) return;

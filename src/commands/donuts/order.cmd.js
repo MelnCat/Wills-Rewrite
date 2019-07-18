@@ -1,11 +1,11 @@
 const Command = require("../../structs/command.struct");
-const { MessageEmbed } = require("discord.js");
+
 module.exports = new Command("order", "Order a donut.", "{orderinfo:str}", 0)
 	.setFunction(async(client, message, args, strings) => {
 		const orders = client.getModel("orders");
 		const { Op } = client.getModule("sql");
 		if (message.author.hasOrder) return message.channel.send(client.errors.ordered);
-		const embed = new MessageEmbed()
+		const embed = new client.MessageEmbed()
 			.setTitle("Donut Menu")
 			.setDescription("Please respond with the ID (number) of the donut you want to order.");
 		for (const type of client.cached.donutTypes) {
