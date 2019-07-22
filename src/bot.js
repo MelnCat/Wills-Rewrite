@@ -40,11 +40,11 @@ Discord.Channel.prototype.send = async function send(content, ...params) {
 
 client.log("Starting bot...");
 
-client.on("modelsLoaded", async() => {
+client.on("modelsLoaded", async () => {
 	// something
 });
 
-client.on("ready", async() => {
+client.on("ready", async () => {
 	await client.loadModels();
 	client.user.setActivity("Just started! Order donuts!");
 	client.getModule("extensions");
@@ -54,7 +54,7 @@ client.on("ready", async() => {
 	client.log(`Currently in ${chalk.greenBright(client.guilds.size)} guild(s)!`);
 });
 
-client.on("guildMemberUpdate", async(oldM, newM) => {
+client.on("guildMemberUpdate", async (oldM, newM) => {
 	if (oldM.isEmployee && !newM.isEmployee) {
 		client.emit("fire", newM);
 	}
@@ -76,7 +76,7 @@ client.on("hire", member => {
 	client.log(`oh yay, ${member.tag} is hired.`);
 });
 
-client.on("messageUpdate", async(oldMessage, newMessage) => {
+client.on("messageUpdate", async (oldMessage, newMessage) => {
 	if (oldMessage.createdAt < Date.now() - 30000) return;
 	client.emit("message", newMessage);
 });
@@ -84,7 +84,6 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 client.on("message", async message => {
 	if (!client.started) return process.exit();
 	if (!message.guild) return;
-	if (client.cached.blacklists.some(x => [message.author.id, message.guild.id, message.channel.id].includes(x.id))) return message.channel.send(client.errors.blacklisted);
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
@@ -114,6 +113,7 @@ client.on("message", async message => {
 
 	// COMMAND INFO START
 	if (!client.getCommand(command)) return;
+	if (client.cached.blacklists.some(x => [message.author.id, message.guild.id, message.channel.id].includes(x.id))) return message.channel.send(client.errors.blacklisted);
 	if (client.constants.permissionFlags.find(x => !message.permissions.includes(x))) {
 		return message.channel.send(`Sorry, the command failed to process because I do not have enough permissions in this channel.
 I require the following permissions to be added:
@@ -146,16 +146,16 @@ ${err.stack}
 /*
 * SQL OnUpdate
 */
-orders.afterCreate(async(order, options) => {
+orders.afterCreate(async (order, options) => {
 	const tm = await client.mainChannels.ticket.send(client.createTicket(order));
 	await order.update({ message: tm.id, expireFinish: Date.now() + client.constants.times.expire });
 });
 
-orders.beforeDestroy(async(order, options) => {
+orders.beforeDestroy(async (order, options) => {
 	await client.users.get(order.user).send("Sorry! Due to unexpected issues, your order was deleted.");
 });
 
-orders.beforeUpdate(async(order, options) => {
+orders.beforeUpdate(async (order, options) => {
 	if (order.status > 3) {
 		if (await client.mainChannels.ticket.messages.fetch(order.message)) {
 			const tm = await client.mainChannels.ticket.messages.fetch(order.message);
