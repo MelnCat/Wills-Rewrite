@@ -7,6 +7,7 @@ const { Op } = require("./modules/sql");
 const { models: { guildinfo, blacklist, orders, stocks }, models, prefix: defaultPrefix, sequelize } = client.getModule("sql");
 const { errors } = constants;
 
+// DEFINITIONS
 Object.defineProperty(Error.prototype, "short", {
 	get() {
 		return `${this.name}: ${this.message}`;
@@ -30,6 +31,12 @@ Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 		return `${this.displayName}#${this.user.discriminator}`;
 	}
 });
+
+const _send = Discord.Channel.prototype.send;
+
+Discord.Channel.prototype.send = async function send(content, ...params) {
+	return _send.call(this, client.utils.messageContent(content), ...params);
+};
 
 client.log("Starting bot...");
 
@@ -77,6 +84,7 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 client.on("message", async message => {
 	if (!client.started) return process.exit();
 	if (!message.guild) return;
+	if (await blacklist.findByPk(message.author.id) || await blacklist.findByPk(message.guild.id) || await blacklist.findByPk(message.channel.id)) return message.channel.send(errors.blacklisted);
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
@@ -86,7 +94,6 @@ client.on("message", async message => {
 		}
 	};
 
-	if (await blacklist.findByPk(message.author.id)) return message.channel.send(errors.blacklisted);
 
 	message.guild.info = await (await guildinfo.findOrCreate({ where: { id: message.guild.id }, defaults: { id: message.guild.id } }))[0];
 	message.author.lastOrder = await orders.findOne({ where: { user: message.author.id }, order: [["createdAt", "DESC"]] });

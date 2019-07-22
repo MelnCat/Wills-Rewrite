@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const define = (o, n, p) => {
 	if (typeof o.prototype[n] !== "undefined") return false;
 	o.prototype[n] = p;
@@ -8,6 +9,10 @@ const staticdefine = (o, n, p) => {
 	o[n] = p;
 	return true;
 };
+/*
+* Discord
+*/
+
 /*
 * Process
 */
@@ -46,7 +51,7 @@ define(String, "replaceCase", function replaceCase(search, replacement) {
 	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement).matchCase(m.concat(m)));
 });
 define(String, "replaceAll", function replaceAll(search, replacement) {
-	return this.replace(new RegExp(search.escapeRegExp(), "gi"), m => String(replacement));
+	return this.replace(new RegExp(search.escapeRegExp(), "gi"), typeof replacement === "function" ? replacement : m => String(replacement));
 });
 define(String, "bulkReplace", function bulkReplace(replacer) {
 	return Object.entries(replacer).reduce((l, c) => l.replaceAll(...c), this);

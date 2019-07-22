@@ -13,7 +13,7 @@ for (const [name, lang] of languageFiles) {
 const constants = {
 	errors: {
 		internal: "🔌 There seems to be an issue with this command. Please contact a bot developer if this issue persists.",
-		blacklisted: "📜 Blacklisted users are not permitted to utilize any commands.",
+		blacklisted: "📜 You seem to be blacklisted, or in a channel, or guild that is blacklisted. Please try again in a different place if you are not blacklisted.",
 		permissions: "📚 You do not have clearance to issue this command.",
 		arguments: "✏ Please ensure that you have supplied proper arguments.\nCommand Format: `{}{} {}`",
 		ordered: "🖥 You currently have an existing order.",

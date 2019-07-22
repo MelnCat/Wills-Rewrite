@@ -218,9 +218,9 @@ module.exports = class DiscordDonuts extends Client {
 
 	loadCommands() {
 		this.commands = new Collection();
-		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => {
+		const commandFiles = glob.sync("./commands/**/*.js").map(file => {
 			delete require.cache[resolve(file)];
-			return [dirname(`../.${file}`), require(`../.${file}`)];
+			return [dirname(`.${file}`), require(`.${file}`)];
 		});
 		for (const [path, command] of commandFiles) {
 			if (!(command instanceof Command)) {
