@@ -84,7 +84,7 @@ client.on("messageUpdate", async(oldMessage, newMessage) => {
 client.on("message", async message => {
 	if (!client.started) return process.exit();
 	if (!message.guild) return;
-	if (await blacklist.findByPk(message.author.id) || await blacklist.findByPk(message.guild.id) || await blacklist.findByPk(message.channel.id)) return message.channel.send(errors.blacklisted);
+	if (client.cached.blacklists.some(x => [message.author.id, message.guild.id, message.channel.id].includes(x.id))) return message.channel.send(client.errors.blacklisted);
 	message.author.hasOrder = Boolean(await orders.findOne({ where: { user: message.author.id, status: { [Op.lt]: 4 } } }));
 	message.author.order = await orders.findOne({ where: { status: { [Op.lt]: 4 }, user: message.author.id } });
 	message.channel.assert = async function assert(id) {
