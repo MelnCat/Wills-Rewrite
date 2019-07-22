@@ -34,7 +34,7 @@ exports.models = {
 			defaultValue: "english"
 		}
 	}),
-	blacklist: sequelize.define("blacklists", {
+	blacklists: sequelize.define("blacklists", {
 		id: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false,
