@@ -113,7 +113,7 @@ client.on("message", async message => {
 
 	// COMMAND INFO START
 	if (!client.getCommand(command)) return;
-	if (client.cached.blacklists.some(x => [message.author.id, message.guild.id, message.channel.id].includes(x.id))) return message.channel.send(client.errors.blacklisted);
+	if (client.cached.blacklist.some(x => [message.author.id, message.guild.id, message.channel.id].includes(x.id))) return message.channel.send(client.errors.blacklisted);
 	if (client.constants.permissionFlags.find(x => !message.permissions.includes(x))) {
 		return message.channel.send(`Sorry, the command failed to process because I do not have enough permissions in this channel.
 I require the following permissions to be added:
