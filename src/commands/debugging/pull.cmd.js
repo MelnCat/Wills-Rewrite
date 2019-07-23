@@ -6,5 +6,5 @@ module.exports = new Command("pull", "Pull changes to the bot.", "", 4)
 	.setFunction(async(client, message, args, strings) => {
 		const list = ["git add -A", "git commit -m 'Pulling'", "git pull"];
 		const res = await Promise.all(list.map(async x => `[${x}]\n${await client.utils.execBash(x)}`));
-		await message.channel.send(res.join("\n"), { code: "ini" });
+		await message.channel.send(res.join(""), { code: "ini" });
 	});
