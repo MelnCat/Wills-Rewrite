@@ -20,8 +20,6 @@ exports.sequelize = sequelize;
 exports.Sequelize = sequelize;
 exports.models = {
 	guildinfo: sequelize.define("guildinfo", {
-		freezeTableName: true,
-		tableName: "guildinfo",
 		id: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false,
@@ -35,19 +33,21 @@ exports.models = {
 			type: Sequelize.TEXT,
 			defaultValue: "english"
 		}
+	}, {
+		freezeTableName: true,
+		tableName: "guildinfo",
 	}),
 	blacklist: sequelize.define("blacklist", {
-		freezeTableName: true,
-		tableName: "blacklist",
 		id: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false,
 			primaryKey: true
 		},
+	}, {
+		freezeTableName: true,
+		tableName: "blacklist",
 	}),
 	orders: sequelize.define("orders", {
-		freezeTableName: true,
-		tableName: "orders",
 		id: {
 			type: Sequelize.CHAR(255),
 			allowNull: false,
@@ -107,19 +107,21 @@ exports.models = {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false
 		}
+	}, {
+		freezeTableName: true,
+		tableName: "orders",
 	}),
 	workerinfo: sequelize.define("workerinfo", {
-		freezeTableName: true,
-		tableName: "workerinfo",
 		id: {
 			type: Sequelize.SNOWFLAKE,
 			allowNull: false,
 			primaryKey: true
 		},
+	}, {
+		freezeTableName: true,
+		tableName: "workerinfo",
 	}),
 	stocks: sequelize.define("stocks", {
-		freezeTableName: true,
-		tableName: "stocks",
 		id: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
@@ -141,10 +143,11 @@ exports.models = {
 			type: Sequelize.TEXT,
 			defaultValue: "⏹"
 		}
+	}, {
+		freezeTableName: true,
+		tableName: "stocks",
 	}),
 	donutTypes: sequelize.define("donutTypes", {
-		freezeTableName: true,
-		tableName: "donutTypes",
 		id: {
 			type: Sequelize.CHAR(255),
 			allowNull: false,
@@ -158,6 +161,9 @@ exports.models = {
 			type: Sequelize.TEXT,
 			allowNull: false
 		}
+	}, {
+		freezeTableName: true,
+		tableName: "donutTypes",
 	})
 };
 exports.Op = Op;
