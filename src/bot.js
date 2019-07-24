@@ -46,7 +46,7 @@ client.on("modelsLoaded", async() => {
 
 client.on("ready", async() => {
 	await client.loadModels();
-	client.user.setActivity("Just started! Order donuts!");
+	await client.user.setActivity("Just started! Order donuts!");
 	client.getModule("extensions");
 	const authenErr = await sequelize.authenticate();
 	if (authenErr) client.error(`${chalk.yellow("Database")} failed to load. ${chalk.red(authenErr)}`);

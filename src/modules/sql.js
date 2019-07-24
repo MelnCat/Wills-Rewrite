@@ -1,4 +1,5 @@
 const { db: { name, username, password, hostname, port } } = require("../auth");
+const client = require("./client");
 const Sequelize = require("sequelize");
 const { Op } = Sequelize;
 const { prefix } = require("./constants");
