@@ -30,7 +30,7 @@ ul li::before {
 	background-color: #bbb;
 	border-radius: 50%;
 	display: inline-block;
-	margin-bottom: -0.15em;
+	margin-bottom: -1em;
 }
 @font-face {
 	font-family: "Whitney";
