@@ -5,6 +5,7 @@
 	<title>Discord Donuts</title>
 	<link id="favicon" rel="icon" href="./site/images/ddicon.png" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="./site/style.css">
+	<script src="https://kit.fontawesome.com/bfe4c30235.js"></script>
 	<meta name="description" content="A discord bot where you can order donuts and get it delivered to your server!">
 	<meta name="og:type" content="website">
 	<meta name="og:url" content="">
@@ -25,7 +26,7 @@
 	<h2>Corporate Officers</h2>
 	<ul>
 		{{#each staff.corporate}}
-		<li><span class="circle" title="{{this.status}}" style="background-color: {{this.color}}">  </span>  {{this.tag}}</li>
+		<li><span class="circle" title="{{this.status}}" style="background-color: {{this.color}}">  </span>  {{this.tag}} {{icon this.device}}</li>
 		{{/each}}
 	</ul>
 </body>

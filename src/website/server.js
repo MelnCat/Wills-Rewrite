@@ -9,6 +9,7 @@ const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offli
 const statusStrings = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
 // helpers
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
+hbs.registerHelper("icon", str => new hbs.SafeString(`<i class="fas fa-${str}"></i>`));
 (async() => {
 	const server = app.listen(42069, () => {
 		client.log(`Website started on ${chalk.greenBright(server.address().port)}!`);
@@ -20,7 +21,18 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	app.get("/", (req, res) => {
 		res.render("index", {
 			staff: {
-				corporate: client.mainRoles.corporate.members.map(x => ({ tag: x.user.tag, color: statusColors[x.user.presence.status], status: statusStrings[x.user.presence.status], id: x.id }))
+				corporate: client.mainRoles.corporate.members.map(x => {
+					const user = x.user;
+					const presence = user.presence;
+					const clientStatus = presence.clientStatus;
+					return {
+						tag: x.user.tag,
+						color: statusColors[presence.status],
+						status: statusStrings[presence.status],
+						id: x.id,
+						device: clientStatus.desktop ? "desktop" : clientStatus.mobile ? "mobile-alt" : clientStatus.web ? "window-maximize" : "question-circle"
+					};
+				})
 			}
 		});
 	});

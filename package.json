@@ -19,6 +19,7 @@
   "homepage": "https://github.com/TNThacker2015/Wills-Rewrite#readme",
   "dependencies": {
     "chalk": "^2.4.2",
+    "discord-oauth2": "^1.3.0",
     "discord.js": "git+https://github.com/discordjs/discord.js.git",
     "dom-parser": "^0.1.5",
     "express": "^4.17.1",
