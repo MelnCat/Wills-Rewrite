@@ -2,6 +2,8 @@ const express = require("express");
 const hbs = require("hbs");
 const client = require("../modules/client");
 const chalk = require("chalk");
+const path = require("path");
+const pathify = str => path.normalize(`${__dirname}/str`);
 const app = express();
 (async() => {
 	const server = app.listen(42069, () => {
@@ -9,7 +11,6 @@ const app = express();
 	});
 	app.set("view engine", "hbs");
 	// GET ROUTES
-	app.use(express.static("public"));
 	app.get("/", (req, res) => {
 		res.send("test good");
 	});
@@ -17,7 +18,7 @@ const app = express();
 		res.send("test2 good");
 	});
 	app.get("/news/:issue", (req, res) => {
-		res.pipe(`./public/news/${req.params.issue}.pdf`);
+		res.pipe(pathify(`./public/news/${req.params.issue}.pdf`));
 	});
 	app.use((req, res) => {
 		res.status(404).render("TODO");
