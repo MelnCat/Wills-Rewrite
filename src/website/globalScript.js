@@ -10,6 +10,6 @@ $(`ul#nav li a`)
 	.toArray()
 	.find(x => document.location.href.match(`${x.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}?$`))
 	.classList.add("active");
-setInterval(()=> {
-	allDiv.style.marginLeft = `${navBar.offsetWidth}px`
-}, 10)
+setInterval(() => {
+	allDiv.style.marginLeft = `${navBar.offsetWidth}px`;
+}, 10);

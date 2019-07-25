@@ -67,7 +67,7 @@ ${nav.map(x => `<li><a href="${pagify(x.page)}" class=>${x.display}</a></li>`).j
 		});
 	});
 	app.get("/news", (req, res) => {
-		res.render("pages/news", { files: glob.sync("./website/public/news/*").map(x => path.basename(x)).reverse() });
+		res.render("pages/news", { files: glob.sync("./website/public/news/*").map(x => path.basename(x)).map((x, i) => [x, i + 1]).reverse() });
 	});
 	app.get("/news/:issue", (req, res) => {
 		res.sendFile(pathify(`./public/news/${req.params.issue}`));

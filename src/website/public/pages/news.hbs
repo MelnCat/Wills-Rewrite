@@ -12,7 +12,8 @@
 	<h1>The Daily Donut Archive</h1>
 	<p>Read ALL Issues of The Daily Donut here!</p>
 	{{#each files}}
-		<iframe src="http://discorddonuts.xyz/site/news/{{this}}">Your browser does not support iframes.</iframe>
+		<h3>Issue {{this.[1]}}</h3>
+		<iframe src="http://discorddonuts.xyz/site/news/{{this.[0]}}">Your browser does not support iframes.</iframe>
 	{{/each}}
 </body>
 
