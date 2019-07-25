@@ -5,7 +5,7 @@ body {
 	font-weight: 600;
 }
 
-ul.nav {
+ul#nav {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -16,7 +16,7 @@ ul.nav {
 	overflow: auto;
 }
 
-ul.nav li a {
+ul#nav li a {
 	display: block;
 	color: #8C9095;
 	padding: 8px 16px;
@@ -31,12 +31,12 @@ ul.nav li a {
 	overflow: hidden;
 }
 
-ul.nav li a.active {
+ul#nav li a.active {
 	background-color: #40444B;
 	color: #FFFFFF;
 }
 
-ul.nav li a:hover:not(.active) {
+ul#nav li a:hover:not(.active) {
 	background-color: #292B2F;
 	color: #D8D9DA;
 }
@@ -78,6 +78,7 @@ ul li::before {
 	width: 1em;
 	margin-left: -1em;
 }
+
 @font-face {
 	font-family: "Whitney";
 	src: url("./fonts/Whitney.ttf");

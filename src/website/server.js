@@ -10,15 +10,16 @@ const app = express();
 const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offline: "#847F8D" };
 const statusStrings = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
 const globalStyle = fs.readFileSync(pathify("./globalStyle.css"), { encoding: "utf8" });
+const globalScript = fs.readFileSync(pathify("./globalScript.js"), { encoding: "utf8" });
 const nav = require("./navigation");
 // helpers
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 hbs.registerHelper("icon", str => new hbs.SafeString(`<i class="fas fa-${str}"></i>`));
 // partials
-hbs.registerPartial("header", `<style>${globalStyle}</style>`);
+hbs.registerPartial("header", `<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><script src="https://kit.fontawesome.com/bfe4c30235.js"></script><style>${globalStyle}</style><script>document.addEventListener("DOMContentLoaded", async function() {${globalScript} }, false);</script>`);
 hbs.registerPartial("starter", `
-<ul class="nav">
-${nav.map(x => `<li><a href="${pagify(x.page)}">${x.display}</a></li>`).join("\n")}
+<ul id="nav">
+${nav.map(x => `<li><a href="${pagify(x.page)}" class=>${x.display}</a></li>`).join("\n")}
 </ul>`);
 (async() => {
 	const server = app.listen(42069, () => {
@@ -40,7 +41,7 @@ ${nav.map(x => `<li><a href="${pagify(x.page)}">${x.display}</a></li>`).join("\n
 						color: statusColors[presence.status],
 						status: statusStrings[presence.status],
 						id: x.id,
-						device: clientStatus.desktop ? "desktop" : clientStatus.mobile ? "mobile-alt" : clientStatus.web ? "window-maximize" : "question-circle"
+						device: clientStatus.desktop ? "desktop" : clientStatus.mobile ? "mobile-alt" : clientStatus.web ? "window-maximize" : "user-slash"
 					};
 				})
 			}
