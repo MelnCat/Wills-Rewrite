@@ -1,6 +1,7 @@
 body {
 	color: #D2D3D3;
 	background-color: #36393F;
+	font-family: Whitney;
 }
 abbr[title] {
 	border-bottom: none !important;
@@ -18,4 +19,9 @@ ul li::before {
 	display: inline-block;
 	width: 1em;
 	margin-left: -1em;
+}
+
+@font-face {
+	font-family: "Whitney";
+	src: url("./site/fonts/Whitney.ttf");
 }
