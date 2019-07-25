@@ -91,9 +91,9 @@ ul li::before {
 
 @font-face {
 	font-family: "Whitney";
-	src: url("./fonts/Whitney.ttf");
+	src: url("./site/fonts/Whitney.ttf");
 }
 @font-face {
 	font-family: "Discord";
-	src: url("./fonts/Discord.ttf");
+	src: url("./site/fonts/Discord.ttf");
 }

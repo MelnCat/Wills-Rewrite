@@ -1,6 +1,6 @@
 module.exports = [
 	{
-		display: "Home",
+		display: "home",
 		page: "/"
 	}
 ];
