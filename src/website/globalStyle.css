@@ -3,6 +3,7 @@ body {
 	background-color: #36393F;
 	font-family: Whitney;
 	font-weight: 600;
+	margin: 0;
 }
 
 ul#nav {
@@ -14,6 +15,7 @@ ul#nav {
 	position: fixed;
 	height: 100%;
 	overflow: auto;
+	max-width: 270px;
 }
 
 ul#nav li a {
