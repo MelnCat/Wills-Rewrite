@@ -13,13 +13,14 @@ const app = express();
 	app.set("view engine", "hbs");
 	// GET ROUTES
 	app.get("/", (req, res) => {
-		res.send("test good");
+		res.render("index");
 	});
 	app.get("/news", (req, res) => {
 		res.send("test2 good");
 	});
 	app.get("/news/:issue", (req, res) => {
-		res.sendFile(pathify(`./public/news/issue_${req.params.issue}.pdf`));
+		res.sendFile(pathify(`./public/news/issue__
+		]${req.params.issue}.pdf`));
 	});
 	app.use((req, res) => {
 		res.status(404).render("TODO");
