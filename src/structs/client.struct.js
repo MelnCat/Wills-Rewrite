@@ -299,6 +299,7 @@ module.exports = class DiscordDonuts extends Client {
 	}
 
 	getCommand(commandResolvable) {
+		commandResolvable = String(commandResolvable).toLowerCase();
 		return this.commands.get(commandResolvable) || this.commands.find(command => [...command.aliases, ...command.shortcuts, command.name].some(str => str === commandResolvable || (compareTwoStrings(str, commandResolvable) > 0.85))) || null;
 	}
 };
