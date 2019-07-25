@@ -9,7 +9,7 @@ const app = express();
 	const server = app.listen(42069, () => {
 		client.log(`Website started on ${chalk.greenBright(server.address().port)}!`);
 	});
-	app.set("views", pathify("./public"));
+	app.set("views", pathify("./"));
 	app.set("view engine", "hbs");
 	// GET ROUTES
 	app.get("/", (req, res) => {
