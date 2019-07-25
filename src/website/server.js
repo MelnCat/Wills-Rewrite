@@ -5,6 +5,9 @@ const chalk = require("chalk");
 const path = require("path");
 const pathify = str => path.normalize(`${__dirname}/${str}`);
 const app = express();
+
+// helpers
+hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 (async() => {
 	const server = app.listen(42069, () => {
 		client.log(`Website started on ${chalk.greenBright(server.address().port)}!`);
@@ -13,7 +16,7 @@ const app = express();
 	app.set("view engine", "hbs");
 	// GET ROUTES
 	app.get("/", (req, res) => {
-		res.render("index");
+		res.render("index", { test: ["a", "b'", 1, 2] });
 	});
 	app.get("/news", (req, res) => {
 		res.send("test2 good");
