@@ -75,6 +75,6 @@ ${nav.map(x => `<li><a href="${pagify(x.page)}" class=>${x.display}</a></li>`).j
 		res.sendFile(pathify(`./public/images/${req.params.image}`));
 	});
 	app.use((req, res) => {
-		res.status(404).render("TODO");
+		res.status(404).render("error/404");
 	});
 })();
