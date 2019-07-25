@@ -50,21 +50,21 @@ const constants = {
 	status: ["Unclaimed", "Claimed", "Cooking", "Cooked", "Delivered", "Deleted", "Expired", "Cancelled"],
 	cstatus: ["OK", "Database Error.", "Internal Error.", "Restarting.", "Updating."],
 	// * SNOWFLAKES
-	mainServer: "511327780726898700",
+	mainServer: "578600419606134804",
 	channels: {
-		ticket: "544342574568177675",
-		kitchen: "545792707726147585",
-		delivery: "546411079299891230",
+		ticket: "593294987806900224",
+		kitchen: "603803964307406868",
+		delivery: "603804087359766633",
 	},
 	roles: {
-		employee: "544335428401102878",
+		employee: "603804241143922699",
 		onDuty: "514857451464556596",
 		corporate: "501061030756089856",
 		// TODO - absent: "543842827977621542"
 	},
 	emojis: {
-		yes: "545049026366537761",
-		no: "545047514584317962",
+		yes: "603804738206695445",
+		no: "603805059452764160",
 	},
 	messages: {
 		stocks: "#592126935765745743:598026017424146443"
