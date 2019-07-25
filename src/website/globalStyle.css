@@ -16,6 +16,7 @@ ul#nav {
 	height: 100%;
 	overflow: auto;
 	max-width: 270px;
+	min-width: 200px;
 }
 
 ul#nav li a {
@@ -75,7 +76,11 @@ ul {
 	list-style: none;
 }
 
-
+iframe {
+	overflow-x: hidden;
+	width: 90%;
+	height: 90%;
+}
 @font-face {
 	font-family: "Whitney";
 	src: url("http://discorddonuts.xyz/site/fonts/Whitney.ttf");
