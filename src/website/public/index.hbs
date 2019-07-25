@@ -24,7 +24,7 @@
 	<h2>Corporate Officers</h2>
 	<ul>
 		{{#each staff.corporate}}
-		<li><abbr title="{{@index.status}}" style="color: {{@index.color}}">⬤</abbr> {{@index.tag}}</li>
+		<li><abbr title="{{this.status}}" style="color: {{this.color}}">⬤</abbr> {{this.tag}}</li>
 		{{/each}}
 	</ul>
 </body>
