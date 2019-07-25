@@ -9,6 +9,7 @@ const app = express();
 	const server = app.listen(42069, () => {
 		client.log(`Website started on ${chalk.greenBright(server.address().port)}!`);
 	});
+	app.set("views", pathify("./public"));
 	app.set("view engine", "hbs");
 	// GET ROUTES
 	app.get("/", (req, res) => {
@@ -18,7 +19,7 @@ const app = express();
 		res.send("test2 good");
 	});
 	app.get("/news/:issue", (req, res) => {
-		res.pipe(pathify(`./public/news/${req.params.issue}.pdf`));
+		res.sendFile(pathify(`./public/news/${req.params.issue}.pdf`));
 	});
 	app.use((req, res) => {
 		res.status(404).render("TODO");
