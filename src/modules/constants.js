@@ -59,7 +59,7 @@ const constants = {
 	roles: {
 		employee: "603804241143922699",
 		onDuty: "514857451464556596",
-		corporate: "501061030756089856",
+		corporate: "578600639618351120",
 		// TODO - absent: "543842827977621542"
 	},
 	emojis: {
