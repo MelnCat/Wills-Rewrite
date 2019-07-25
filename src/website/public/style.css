@@ -10,7 +10,7 @@ abbr[title] {
 	text-decoration: none !important;
 }
 h1, h2, h3, h4, h5, h6 {
-  font: Discord;
+  font-family: Discord;
 }
 ul {
 	list-style: none;
@@ -24,7 +24,14 @@ ul li::before {
 	width: 1em;
 	margin-left: -1em;
 }
-
+.circle {
+	height: 1em;
+	width: 1em;
+	background-color: #bbb;
+	border-radius: 50%;
+	display: inline-block;
+	margin-bottom: -0.15em;
+}
 @font-face {
 	font-family: "Whitney";
 	src: url("./fonts/Whitney.ttf");
