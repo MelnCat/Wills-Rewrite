@@ -31,7 +31,7 @@ ul li::before {
 	cursor: help !important;
 	border-radius: 50%;
 	display: inline-block;
-	margin-bottom: -0.3em;
+	margin-bottom: -0.2em;
 }
 @font-face {
 	font-family: "Whitney";
@@ -39,5 +39,5 @@ ul li::before {
 }
 @font-face {
 	font-family: "Discord";
-	src: url("./fonts/Discord.otf");
+	src: url("./fonts/Discord.ttf");
 }
