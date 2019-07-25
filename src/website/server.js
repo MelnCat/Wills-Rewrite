@@ -6,6 +6,7 @@ const path = require("path");
 const pathify = str => path.normalize(`${__dirname}/${str}`);
 const app = express();
 const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offline: "#847F8D" };
+const statusStrings = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
 // helpers
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 (async() => {
@@ -18,7 +19,7 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	app.get("/", (req, res) => {
 		res.render("index", {
 			staff: {
-				corporate: client.mainRoles.corporate.members.map(x => ({ tag: x.user.tag, color: statusColors[x.user.presence.status], id: x.id }))
+				corporate: client.mainRoles.corporate.members.map(x => ({ tag: x.user.tag, color: statusColors[x.user.presence.status], status: statusStrings[x.user.presence.status], id: x.id }))
 			}
 		});
 	});
