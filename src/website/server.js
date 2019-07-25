@@ -13,4 +13,13 @@ const app = express();
 	app.get("/", (req, res) => {
 		res.send("test good");
 	});
+	app.get("/news", (req, res) => {
+		res.send("test2 good");
+	});
+	app.get("/news/:issue", (req, res) => {
+		res.pipe(`./public/news/${req.params.issue}.pdf`);
+	});
+	app.use((req, res) => {
+		res.status(404).render("TODO");
+	});
 })();
