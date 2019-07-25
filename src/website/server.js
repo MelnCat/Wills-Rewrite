@@ -7,6 +7,10 @@ const pathify = str => path.normalize(`${__dirname}/${str}`);
 const app = express();
 
 // helpers
+hbs.registerHelper("reverseWord", value => {
+	var reversedWord = value.split("").reverse().join("");
+	return reversedWord;
+});
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 (async() => {
 	const server = app.listen(42069, () => {
