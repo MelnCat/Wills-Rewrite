@@ -41,7 +41,27 @@ Discord.Channel.prototype.send = async function send(content, ...params) {
 client.log("Starting bot...");
 
 client.on("modelsLoaded", async() => {
-	// something
+	const workerinfo = client.getModel("workerinfo");
+	// workerinfo instance methods
+	workerinfo.prototype.getStats = function getStats(startTime = 0, endTime = Infinity) {
+		const timedOrders = client.cached.orders.filter(x => x.createdAt >= startTime && x.createdAt <= endTime);
+		const stats = {
+			ordersCooked: timedOrders.filter(x => x.claimer === this.id && x.status > 1),
+			ordersDelivered: timedOrders.filter(x => x.deliverer === this.id && x.status === 4)
+		};
+		stats.cooks = stats.ordersCooked.length;
+		stats.delivers = stats.ordersDelivered.length;
+		stats.total = stats.cooks + stats.delivers;
+		return stats;
+	};
+	workerinfo.prototype.getUser = function getUser() {
+		const user = client.users.get(this.id) || {};
+		return {
+			id: this.id,
+			username: user.username || this.tag,
+			tag: user.tag || this.tag
+		};
+	};
 });
 
 client.on("ready", async() => {
@@ -50,6 +70,8 @@ client.on("ready", async() => {
 	client.getModule("extensions");
 	const authenErr = await sequelize.authenticate();
 	if (authenErr) client.error(`${chalk.yellow("Database")} failed to load. ${chalk.red(authenErr)}`);
+	require("./website/server");
+	client.log(`${chalk.blueBright("Website loaded!")}`);
 	client.log(`${chalk.cyanBright("Bot started!")} Logged in at ${chalk.bold(client.user.tag)}. ID: ${chalk.blue(client.user.id)}`);
 	client.log(`Currently in ${chalk.greenBright(client.guilds.size)} guild(s)!`);
 });
