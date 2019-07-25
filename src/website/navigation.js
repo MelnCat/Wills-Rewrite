@@ -4,7 +4,7 @@ module.exports = [
 		page: "/"
 	},
 	{
-		display: "temp",
+		display: "daily-donut-archive",
 		page: "/news/"
 	},
 ];

@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>The Daily Donut</title>
+	<script src="http://discorddonuts.xyz/site/pages/news.js"></script>
+	{{> header}}
+</head>
+
+<body>
+	{{> starter}}
+	<h1>The Daily Donut Archive</h1>
+	<p>Read ALL Issues of The Daily Donut here!</p>
+	{{#each files}}
+		<iframe height=100 width=100 src="http://discorddonuts.xyz/site/news/{{this}}">Your browser does not support iframes.</iframe>
+	{{/each}}
+</body>
+
+</html>

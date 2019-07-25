@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const pathify = str => path.normalize(`${__dirname}/${str}`);
 const pagify = str => `http://discorddonuts.xyz/site${str}`;
+const glob = require("glob");
 const app = express();
 const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offline: "#847F8D" };
 const statusStrings = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
@@ -66,10 +67,10 @@ ${nav.map(x => `<li><a href="${pagify(x.page)}" class=>${x.display}</a></li>`).j
 		});
 	});
 	app.get("/news", (req, res) => {
-		res.send("test2 good");
+		res.render("pages/news", { files: glob.sync("./website/public/news/*").map(x => path.basename(x)) });
 	});
 	app.get("/news/:issue", (req, res) => {
-		res.sendFile(pathify(`./public/news/issue_${req.params.issue}.pdf`));
+		res.sendFile(pathify(`./public/news/${req.params.issue}`));
 	});
 	app.get("/images/:image", (req, res) => {
 		res.sendFile(pathify(`./public/images/${req.params.image}`));
