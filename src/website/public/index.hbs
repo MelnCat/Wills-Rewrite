@@ -22,8 +22,11 @@
 	<p>asdfghjkl description here</p>
 	<h1>Staff</h1>
 	<h2>Corporate Officers</h2>
-	{{ulist test}}
-	{{reverseWord "abcdef"}}
+	<ul>
+		{{#each corporate}}
+		<li><span style="color: {{@index.color}}">⬤</span>{{@index.tag}}</li>
+		{{/each}}
+	</ul>
 </body>
 
 </html>

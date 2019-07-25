@@ -5,12 +5,8 @@ const chalk = require("chalk");
 const path = require("path");
 const pathify = str => path.normalize(`${__dirname}/${str}`);
 const app = express();
-
+const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offline: "#847F8D" };
 // helpers
-hbs.registerHelper("reverseWord", value => {
-	var reversedWord = value.split("").reverse().join("");
-	return reversedWord;
-});
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 (async() => {
 	const server = app.listen(42069, () => {
@@ -20,7 +16,11 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	app.set("view engine", "hbs");
 	// GET ROUTES
 	app.get("/", (req, res) => {
-		res.render("index", { test: ["a", "b'", 1, 2] });
+		res.render("index", {
+			staff: {
+				corporate: client.mainRoles.corporate.members.map(x => ({ tag: x.user.tag, color: statusColors[x.user.presence.status], id: x.id }))
+			}
+		});
 	});
 	app.get("/news", (req, res) => {
 		res.send("test2 good");
