@@ -8,6 +8,9 @@ abbr[title] {
 	cursor: help !important;
 	text-decoration: none !important;
 }
+h1, h2, h3, h4, h5, h6 {
+  font: Discord;
+}
 ul {
 	list-style: none;
 	/* Remove default bullets */
@@ -23,5 +26,9 @@ ul li::before {
 
 @font-face {
 	font-family: "Whitney";
-	src: url("./site/fonts/Whitney.ttf");
+	src: url("./fonts/Whitney.ttf");
+}
+@font-face {
+	font-family: "Discord";
+	src: url("./fonts/Discord.otf");
 }
