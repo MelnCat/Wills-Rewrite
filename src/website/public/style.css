@@ -28,9 +28,10 @@ ul li::before {
 	height: 1em;
 	width: 1em;
 	background-color: #bbb;
+	cursor: help !important;
 	border-radius: 50%;
 	display: inline-block;
-	margin-bottom: -1em;
+	margin-bottom: -0.3em;
 }
 @font-face {
 	font-family: "Whitney";
