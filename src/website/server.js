@@ -19,8 +19,10 @@ const app = express();
 		res.send("test2 good");
 	});
 	app.get("/news/:issue", (req, res) => {
-		res.sendFile(pathify(`./public/news/issue__
-		]${req.params.issue}.pdf`));
+		res.sendFile(pathify(`./public/news/issue_${req.params.issue}.pdf`));
+	});
+	app.get("/images/:image", (req, res) => {
+		res.sendFile(pathify(`./public/images/${req.params.image}`));
 	});
 	app.use((req, res) => {
 		res.status(404).render("TODO");
