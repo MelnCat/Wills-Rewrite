@@ -15,7 +15,7 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	});
 	app.set("views", pathify("./public"));
 	app.set("view engine", "hbs");
-	app.use(express.static("public"));
+	app.use(express.static(pathify("./public")));
 	// GET ROUTES
 	app.get("/", (req, res) => {
 		res.render("index", {
