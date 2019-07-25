@@ -15,6 +15,7 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	});
 	app.set("views", pathify("./public"));
 	app.set("view engine", "hbs");
+	app.use(express.static("public"));
 	// GET ROUTES
 	app.get("/", (req, res) => {
 		res.render("index", {
@@ -32,9 +33,7 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	app.get("/images/:image", (req, res) => {
 		res.sendFile(pathify(`./public/images/${req.params.image}`));
 	});
-	/*
 	app.use((req, res) => {
 		res.status(404).render("TODO");
 	});
-	*/
 })();
