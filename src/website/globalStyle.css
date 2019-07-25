@@ -36,6 +36,10 @@ ul#nav li a.active {
 	color: #FFFFFF;
 }
 
+ul#nav li a::before {
+	content: url("http://discorddonuts.xyz/site/images/hash.svg");
+}
+
 ul#nav li a:hover:not(.active) {
 	background-color: #292B2F;
 	color: #D8D9DA;
@@ -44,7 +48,6 @@ ul {
 	list-style: none;
 	/* Remove default bullets */
 }
-
 ul li::before {
 	content: "\2022";
 	color: #F2F3F3;
