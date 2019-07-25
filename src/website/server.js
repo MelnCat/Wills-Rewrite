@@ -3,13 +3,23 @@ const hbs = require("hbs");
 const client = require("../modules/client");
 const chalk = require("chalk");
 const path = require("path");
+const fs = require("fs");
 const pathify = str => path.normalize(`${__dirname}/${str}`);
+const pagify = str => `http://discorddonuts.xyz/site${str}`;
 const app = express();
 const statusColors = { online: "#43B561", idle: "#FAB62A", dnd: "#F04757", offline: "#847F8D" };
 const statusStrings = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
+const globalStyle = fs.readFileSync(pathify("./globalStyle.css"), { encoding: "utf8" });
+const nav = require("./navigation");
 // helpers
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 hbs.registerHelper("icon", str => new hbs.SafeString(`<i class="fas fa-${str}"></i>`));
+// partials
+hbs.registerPartial("header", `<style>${globalStyle}</style>`);
+hbs.registerPartial("starter", `
+<ul class="nav">
+${nav.map(x => `<li><a href="${pagify(x.page)}">${x.display}</a></li>`).join("\n")}
+</ul>`);
 (async() => {
 	const server = app.listen(42069, () => {
 		client.log(`Website started on ${chalk.greenBright(server.address().port)}!`);
@@ -24,7 +34,7 @@ hbs.registerHelper("icon", str => new hbs.SafeString(`<i class="fas fa-${str}"><
 				corporate: client.mainRoles.corporate.members.map(x => {
 					const user = x.user;
 					const presence = user.presence;
-					const clientStatus = presence.clientStatus;
+					const clientStatus = presence.clientStatus || {};
 					return {
 						tag: x.user.tag,
 						color: statusColors[presence.status],

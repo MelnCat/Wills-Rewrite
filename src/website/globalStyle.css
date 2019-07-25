@@ -1,0 +1,88 @@
+body {
+	color: #D2D3D3;
+	background-color: #36393F;
+	font-family: Whitney;
+	font-weight: 600;
+}
+
+ul.nav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 25%;
+	background-color: #2F3136;
+	position: fixed;
+	height: 100%;
+	overflow: auto;
+}
+
+ul.nav li a {
+	display: block;
+	color: #8C9095;
+	padding: 8px 16px;
+	text-decoration: none;
+	box-sizing: border-box;
+	height: 32px;
+	border-radius: 4px;
+	margin: 4px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	overflow: hidden;
+}
+
+ul.nav li a.active {
+	background-color: #40444B;
+	color: #FFFFFF;
+}
+
+ul.nav li a:hover:not(.active) {
+	background-color: #292B2F;
+	color: #D8D9DA;
+}
+ul {
+	list-style: none;
+	/* Remove default bullets */
+}
+
+ul li::before {
+	content: "\2022";
+	color: #F2F3F3;
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em;
+}
+
+abbr[title] {
+	border-bottom: none !important;
+	cursor: help !important;
+	text-decoration: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: Discord;
+}
+ul {
+	list-style: none;
+}
+
+ul li::before {
+	content: "\2022";
+	color: #F2F3F3;
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em;
+}
+@font-face {
+	font-family: "Whitney";
+	src: url("./fonts/Whitney.ttf");
+}
+@font-face {
+	font-family: "Discord";
+	src: url("./fonts/Discord.ttf");
+}

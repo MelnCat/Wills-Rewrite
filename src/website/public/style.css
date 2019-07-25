@@ -1,29 +1,3 @@
-body {
-	color: #D2D3D3;
-	background-color: #36393F;
-	font-family: Whitney;
-	font-weight: 600;
-}
-abbr[title] {
-	border-bottom: none !important;
-	cursor: help !important;
-	text-decoration: none !important;
-}
-h1, h2, h3, h4, h5, h6 {
-  font-family: Discord;
-}
-ul {
-	list-style: none;
-	/* Remove default bullets */
-}
-
-ul li::before {
-	content: "\2022";
-	color: #F2F3F3;
-	display: inline-block;
-	width: 1em;
-	margin-left: -1em;
-}
 .circle {
 	height: 1em;
 	width: 1em;
@@ -32,12 +6,4 @@ ul li::before {
 	border-radius: 50%;
 	display: inline-block;
 	margin-bottom: -0.2em;
-}
-@font-face {
-	font-family: "Whitney";
-	src: url("./fonts/Whitney.ttf");
-}
-@font-face {
-	font-family: "Discord";
-	src: url("./fonts/Discord.ttf");
 }
