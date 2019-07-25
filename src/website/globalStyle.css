@@ -55,14 +55,6 @@ ul#nav li a:hover:not(.active) {
 }
 ul {
 	list-style: none;
-	/* Remove default bullets */
-}
-ul li::before {
-	content: "\2022";
-	color: #F2F3F3;
-	display: inline-block;
-	width: 1em;
-	margin-left: -1em;
 }
 
 abbr[title] {
@@ -83,19 +75,12 @@ ul {
 	list-style: none;
 }
 
-ul li::before {
-	content: "\2022";
-	color: #F2F3F3;
-	display: inline-block;
-	width: 1em;
-	margin-left: -1em;
-}
 
 @font-face {
 	font-family: "Whitney";
-	src: url("./site/fonts/Whitney.ttf");
+	src: url("http://discorddonuts.xyz/site/fonts/Whitney.ttf");
 }
 @font-face {
 	font-family: "Discord";
-	src: url("./site/fonts/Discord.ttf");
+	src: url("http://discorddonuts.xyz/site/fonts/Discord.ttf");
 }
