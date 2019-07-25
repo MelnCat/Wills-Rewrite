@@ -2,6 +2,7 @@ body {
 	color: #D2D3D3;
 	background-color: #36393F;
 	font-family: Whitney;
+	font-weight: 600;
 }
 abbr[title] {
 	border-bottom: none !important;
