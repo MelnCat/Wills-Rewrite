@@ -32,7 +32,9 @@ hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<l
 	app.get("/images/:image", (req, res) => {
 		res.sendFile(pathify(`./public/images/${req.params.image}`));
 	});
+	/*
 	app.use((req, res) => {
 		res.status(404).render("TODO");
 	});
+	*/
 })();
