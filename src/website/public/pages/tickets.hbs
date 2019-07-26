@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>The Daily Donut</title>
+	{{> header}}
+</head>
+
+<body>
+	{{> starter}}
+	<h1>Active Orders</h1>
+	<p>A list of all orders that are currently active.</p>
+	{{#each orders}}
+		<h3><code>{{this.id}}</code></h3>
+		<p>Description: {{this.description}}</p>
+		<p>Status: {{statusString this.status}}</p>
+		<p>Customer: {{getUser this.user}}</p>
+		<br />
+	{{/each}}
+</body>
+
+</html>

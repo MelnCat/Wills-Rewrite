@@ -16,6 +16,8 @@ const nav = require("./navigation");
 // helpers
 hbs.registerHelper("ulist", arr => new hbs.SafeString(`<ul>\n${arr.map(x => `	<li>${x}</li>`).join("\n")}\n</ul>`));
 hbs.registerHelper("icon", str => new hbs.SafeString(`<i class="fas fa-${str}"></i>`));
+hbs.registerHelper("statusString", order => new hbs.SafeString(client.statusOf(order)));
+hbs.registerHelper("getUser", id => client.users.get(id));
 // partials
 hbs.registerPartial("header", `
 <link id="favicon" rel="icon" href="${pagify("./public/images/icon.ico")}" type="image/x-icon">
@@ -67,7 +69,15 @@ ${nav.map(x => `<li><a href="${pagify(x.page)}" class=>${x.display}</a></li>`).j
 		});
 	});
 	app.get("/news", (req, res) => {
-		res.render("pages/news", { files: glob.sync("./website/public/news/*").map(x => path.basename(x)).map((x, i) => [x, i + 1]).reverse() });
+		res.render("pages/news", { files: glob.sync("./website/public/news/*")
+			.map(x => path.basename(x)).map((x, i) => [x, i + 1])
+			.reverse()
+		});
+	});
+	app.get("/tickets", (req, res) => {
+		res.render("pages/tickets", {
+			orders: client.cached.orders.filter(x => x.status < 4)
+		});
 	});
 	app.get("/news/:issue", (req, res) => {
 		res.sendFile(pathify(`./public/news/${req.params.issue}`));
