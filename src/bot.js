@@ -32,7 +32,7 @@ Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 	}
 });
 
-const _send = Discord.Channel.prototype.send;
+const _send = Discord.TextChannel.prototype.send;
 
 Discord.TextChannel.prototype.send = async function send(content, ...params) {
 	return _send.call(this, client.utils.messageContent(content), ...params);
