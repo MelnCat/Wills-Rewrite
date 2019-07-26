@@ -12,6 +12,7 @@ module.exports = new Command("order", "Order a donut.", "{orderinfo:str}", 0)
 			embed.addField(`[${type.id} ${type.name}]`, `${client.cached.orders.filter(x => x.type === +type.id).length} orders`);
 		}
 		const tId = await client.utils.getText(message, embed, 40000, m => m.content >= 0 && m.content < client.cached.donutTypes.length);
+		if (typeof tId === "undefined") return;
 		const typeId = String(tId);
 		if (typeId === undefined) return;
 		const donutType = client.cached.donutTypes.find(x => x.id === typeId);

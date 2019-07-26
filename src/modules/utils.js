@@ -64,7 +64,7 @@ exports.chunk = (array = [], size = 3) => {
 };
 exports.getText = async(message, display = "Respond with text.", time = 40000, filter = m => m.author.id === message.author.id) => {
 	await message.channel.send(display);
-	const res = await message.channel.awaitMessages(m => filter(m) && m.author.id === message.author.id, { time, max: 1 });
+	const res = await message.channel.awaitMessages(m => m.content && (m.content.toLowerCase() === "cancel" || filter(m)) && m.author.id === message.author.id, { time, max: 1 });
 	if (!res.size) return void message.channel.send("No response. Cancelled.");
 	const resm = res.first();
 	if (resm.attachments.size) return resm.attachments.first().proxyURL;
