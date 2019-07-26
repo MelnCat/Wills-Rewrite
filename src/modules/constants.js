@@ -23,6 +23,7 @@ const constants = {
 		channel: "📲 This command is not avaliable in this channel. Please change the channel to <#{}>.",
 		url: "📷 Invalid link argument provided.",
 		deprecated: "⚠ This command is deprecated, and may be removed in a future update. Please use an alternative method or command.",
+		emojiString: "",
 		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",

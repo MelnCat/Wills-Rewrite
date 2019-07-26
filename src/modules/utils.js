@@ -175,4 +175,18 @@ exports.UWUfy = val => {
 		val[k] = nv;
 	}
 };
-exports.messageContent = str => str;
+exports.messageContent = (message, val) => {
+	const _internal = str => str.replace(/\[.+?\]/g, x => {
+		const y = x.match(/(?<=\[).+?(?=\])/g);
+		if (!y) return x;
+		return message.client.mainEmojis[y[0]] || x;
+	});
+	if (val instanceof MessageEmbed) {
+		val.description = _internal(val.description);
+		for (const [key, value] of Object.entries(val.fields)) {
+			val.fields[key] = _internal(value);
+		}
+	}
+	if (typeof val === "string") val = _internal(val);
+	return val;
+};
