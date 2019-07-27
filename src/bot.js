@@ -131,7 +131,7 @@ client.on("message", async message => {
 
 	message.content = message.content.replace(prefix, "").trim();
 	message.permissions = message.channel.permissionsFor(client.user.id).toArray();
-	const args = message.content.split(/\s+/);
+	const args = message.content.match(/('.*?'|".*?"|\S+)/g).map(x => x.replace(/^"(.+(?="$))"$/, "$1"));
 	message.arguments = args;
 	const command = args.shift();
 
