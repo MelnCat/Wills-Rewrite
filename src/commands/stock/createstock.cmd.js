@@ -8,7 +8,7 @@ module.exports = new Command("createstock", "Restock an ingredient!", "{name:str
 		const [name, , symbol] = args;
 		const capacity = +args[1];
 		const count = await stocks.count();
-		await stocks.create({ id: count, max: capacity, count: capacity, emoji: symbol });
-		await message.channel.send(`[yes] Successfully created stock. Details: ID: ${count}, Capacity: ${capacity}, Symbol: ${symbol}`);
+		await stocks.create({ id: count, name, max: capacity, count: capacity, emoji: symbol });
+		await message.channel.send(`[yes] Successfully created stock. Details: Name: ${name}, ID: ${count}, Capacity: ${capacity}, Symbol: ${symbol}`);
 	})
 	.setAlias("makestock", "makeingredient", "createingredient");
