@@ -22,7 +22,10 @@ const constants = {
 		nonexistent: "❎ You currently do not have an order, why not try ordering one?",
 		channel: "📲 This command is not avaliable in this channel. Please change the channel to <#{}>.",
 		url: "📷 Invalid link argument provided.",
-		deprecated: "⚠ This command is deprecated, and may be removed in a future update. Please use an alternative method or command.",		codes: {
+		deprecated: "⚠ This command is deprecated, and may be removed in a future update. Please use an alternative method or command.",
+		range: "🔢 Number was too high or too low. Please try again.",
+		stockNotFound: "🛒 The requested ingredient was not found. Please try again.",
+		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",
 			500: "🔧 Discord is currently having an internal server error. Sorry!",
