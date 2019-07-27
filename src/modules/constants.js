@@ -22,9 +22,7 @@ const constants = {
 		nonexistent: "❎ You currently do not have an order, why not try ordering one?",
 		channel: "📲 This command is not avaliable in this channel. Please change the channel to <#{}>.",
 		url: "📷 Invalid link argument provided.",
-		deprecated: "⚠ This command is deprecated, and may be removed in a future update. Please use an alternative method or command.",
-		emojiString: "",
-		codes: {
+		deprecated: "⚠ This command is deprecated, and may be removed in a future update. Please use an alternative method or command.",		codes: {
 			403: "📠 Server refused action.",
 			418: "🍵 I'm a teapot.",
 			500: "🔧 Discord is currently having an internal server error. Sorry!",
@@ -66,6 +64,7 @@ const constants = {
 	emojis: {
 		yes: "603804738206695445",
 		no: "603805059452764160",
+		vanilla: "604473167796502561",
 	},
 	messages: {
 		stocks: "#592126935765745743:598026017424146443"
