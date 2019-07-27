@@ -8,14 +8,14 @@ module.exports = new Command("blacklist", "Blacklist or unblacklist a guild, use
 		if (!args[1] || !args[0].equalsAny("add", "remove")) await message.argError();
 		if (isNaN(args[1])) return message.channel.send(strings.args.invalidID);
 		if (args[0] === "add") {
-			if (await blacklist.findByPk(args[1])) return message.channel.send(`${client.mainEmojis.no} That ID is already blacklisted!`);
+			if (await blacklist.findByPk(args[1])) return message.channel.send(`[no] That ID is already blacklisted!`);
 			await blacklist.create({ id: args[1] });
-			await message.channel.send(`${client.mainEmojis.yes} The ID was successfully blacklisted!`);
+			await message.channel.send(`[yes] The ID was successfully blacklisted!`);
 		} else {
 			const user = await blacklist.findByPk(args[1]);
-			if (!user) return message.channel.send(`${client.mainEmojis.no} That ID is not blacklisted!`);
+			if (!user) return message.channel.send(`[no] That ID is not blacklisted!`);
 			await user.destroy();
-			await message.channel.send(`${client.mainEmojis.yes} The ID was successfully removed from the blacklist!`);
+			await message.channel.send(`[yes] The ID was successfully removed from the blacklist!`);
 		}
 	})
 	.setShortcuts("bl");

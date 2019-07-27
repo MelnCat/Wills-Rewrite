@@ -17,7 +17,7 @@ module.exports = new Command("prepare", "Prepare a donut.", "[order:str]", 2)
 			.setTimestamp();
 		for (const [stock, count] of inspected) {
 			const number = stock.count;
-			embed.addField(`${number >= count ? client.mainEmojis.yes : client.mainEmojis.no} ${stock.emoji} ${count} ${stock.name}`, `${number}/${count} ${stock.name}`);
+			embed.addField(`[${number >= count ? "yes" : "no"}] ${stock.emoji} ${count} ${stock.name}`, `${number}/${count} ${stock.name}`);
 		}
 		await message.channel.send(embed);
 		if (inspected.find(([a, b]) => a.count < b)) return message.channel.send("Not enough ingredients.");
