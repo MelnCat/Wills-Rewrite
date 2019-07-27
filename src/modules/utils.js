@@ -181,10 +181,13 @@ exports.messageContent = (message, val) => {
 		if (!y) return x;
 		return message.client.mainEmojis[y[0]] || x;
 	});
+	if ("embed" in val) val = new MessageEmbed(val.embed);
 	if (val instanceof MessageEmbed) {
 		val.description = _internal(val.description);
-		for (const [key, value] of Object.entries(val.fields)) {
-			val.fields[key] = _internal(value);
+		for (const field of val.fields) {
+			for (const [key, value] of Object.entries(field)) {
+				field[key] = _internal(value);
+			}
 		}
 	}
 	if (typeof val === "string") val = _internal(val);
