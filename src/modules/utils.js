@@ -183,8 +183,8 @@ exports.messageContent = (message, val) => {
 	});
 	if (typeof val === "object" && "embed" in val) val = new MessageEmbed(val.embed);
 	if (val instanceof MessageEmbed) {
-		if ("description" in val) val.description = _internal(val.description);
-		if ("field" in val) {
+		if (val.description) val.description = _internal(val.description);
+		if (val.fields) {
 			for (const field of val.fields) {
 				for (const [key, value] of Object.entries(field)) {
 					field[key] = _internal(value);

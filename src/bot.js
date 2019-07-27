@@ -41,7 +41,6 @@ Discord.TextChannel.prototype.send = async function send(content, ...params) {
 Discord.DMChannel.prototype.send = async function send(content, ...params) {
 	return _send.call(this, client.utils.messageContent(this, content), ...params);
 };
-
 Discord.Message.prototype.edit = async function edit(content, ...params) {
 	return _edit.call(this, client.utils.messageContent(this, content), ...params);
 };
