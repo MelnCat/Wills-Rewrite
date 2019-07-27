@@ -176,17 +176,19 @@ exports.UWUfy = val => {
 	}
 };
 exports.messageContent = (message, val) => {
-	const _internal = str => str.replace(/\[.+?\]/g, x => {
+	const _internal = str => String(str).replace(/\[.+?\]/g, x => {
 		const y = x.match(/(?<=\[).+?(?=\])/g);
 		if (!y) return x;
 		return message.client.mainEmojis[y[0]] || x;
 	});
 	if (typeof val === "object" && "embed" in val) val = new MessageEmbed(val.embed);
 	if (val instanceof MessageEmbed) {
-		val.description = _internal(val.description);
-		for (const field of val.fields) {
-			for (const [key, value] of Object.entries(field)) {
-				field[key] = _internal(value);
+		if ("description" in val) val.description = _internal(val.description);
+		if ("field" in val) {
+			for (const field of val.fields) {
+				for (const [key, value] of Object.entries(field)) {
+					field[key] = _internal(value);
+				}
 			}
 		}
 	}
