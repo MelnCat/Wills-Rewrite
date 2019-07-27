@@ -33,12 +33,17 @@ Object.defineProperty(Discord.GuildMember.prototype, "tag", {
 });
 
 const _send = Discord.TextChannel.prototype.send;
+const _edit = Discord.Message.prototype.edit;
 
 Discord.TextChannel.prototype.send = async function send(content, ...params) {
 	return _send.call(this, client.utils.messageContent(this, content), ...params);
 };
 Discord.DMChannel.prototype.send = async function send(content, ...params) {
 	return _send.call(this, client.utils.messageContent(this, content), ...params);
+};
+
+Discord.Message.prototype.edit = async function edit(content, ...params) {
+	return _edit.call(this, client.utils.messageContent(this, content), ...params);
 };
 
 client.log("Starting bot...");
