@@ -84,7 +84,7 @@ exports.Matrix = class Matrix {
 		this.map[row][column] = newval;
 		return this.map;
 	}
-	from(val) {
+	static from(val) {
 		if (!(val instanceof Array && val.every(x => x instanceof Array))) throw TypeError(`${val} is not a valid 2D Array.`);
 		const matrix = new Matrix();
 		matrix.map = val;
