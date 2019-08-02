@@ -66,20 +66,7 @@ define(String, "replaceAsync", async function replaceAsync(replacer, replaceFunc
 	return this.replace(replacer, () => data.shift());
 });
 define(String, "matchCase", function matchCase(pattern) {
-	var result = "";
-
-	for (var i = 0; i < this.length; i++) {
-		var c = this.charAt(i);
-		var p = pattern.charCodeAt(i);
-
-		if (p >= 65 && p < 65 + 26) {
-			result += c.toUpperCase();
-		} else {
-			result += c.toLowerCase();
-		}
-	}
-
-	return result;
+	return Array.from(this).map((x, i) => pattern.charCodeAt(i) >= 65 && pattern.charCodeAt(i) < 65 + 26 ? x.toUpperCase() : x.toLowerCase());
 });
 define(Array, "groupBy", function groupBy(func) {
 	return this.reduce((objectsByKeyValue, obj) => {

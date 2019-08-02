@@ -1,13 +1,12 @@
 const Command = require("../../structs/command.struct");
 
 
-module.exports = new Command("restock", "Restock an ingredient!", "{ingredientID:int}", 2)
+module.exports = new Command("restock", "Restock an ingredient!", "", 2)
 	.setFunction(async(client, message, args, strings) => {
 		const ingredients = client.getModel("stocks");
-		if (isNaN(args[0]) || typeof args[0] === "undefined") await message.argError();
-		args[0] = Number(args[0]);
-		const ingr = await ingredients.findByPk(args[0]);
-		if (!ingr) return message.channel.send("Please input a valid ingredient ID.");
-		await ingr.update({ count: ingr.max });
-		await message.channel.send(`🛒 **${ingr.name}** has been restocked!`);
+		const all = ingredients.findAll();
+		const msg = await message.channel.send(`Loading ingredient matrix...`);
+		const stocks = new client.Matrix(6, 3, () => all.random());
+		const display = stocks.map.map(y => y.map(x => x.emoji));
+		await msg.edit(display);
 	});

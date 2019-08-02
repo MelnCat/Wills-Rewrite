@@ -5,7 +5,7 @@ class GenericError extends Error {
 	}
 }
 
-class EndCommand extends GenericError {}
+class EndCommand extends GenericError { }
 exports.EndCommand = EndCommand;
 
 class WrongChannelError extends EndCommand { }
@@ -38,7 +38,7 @@ exports.ProgressBar = class ProgressBar {
 	}
 
 	setMin(m) {
-		this.min = m;
+		this.min = 0;
 		return this;
 	}
 
@@ -57,3 +57,35 @@ exports.ProgressBar = class ProgressBar {
 		return this;
 	}
 };
+exports.Matrix = class Matrix {
+	constructor(rows, columns, defaultValue = 0) {
+		this.map = Array(rows)
+			.fill(0)
+			.map((x, i) => Array(columns)
+				.fill(typeof defaultValue === "function" ? defaultValue(i) : defaultValue));
+	}
+	validate(row, column) {
+		return Boolean(this.map[row] && this.map[row][column]);
+	}
+	row(number) {
+		if (!this.validate(number, 0)) throw TypeError(`Row ${number} does not exist.`);
+		return this.map[number];
+	}
+	column(number) {
+		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
+		return this.map.map(x => x[number]);
+	}
+	get(row, column) {
+		if (!this.validate(row, column)) throw TypeError(`Point (${row}, ${column}) does not exist.`);
+		return this.map[row][column];
+	}
+	set(row, column, newval) {
+		if (!this.validate(row, column)) throw TypeError(`Point (${row}, ${column}) does not exist.`);
+		this.map[row][column] = newval;
+		return this.map;
+	}
+	toString() {
+		return this.map.map(x => x.join("")).join("\n");
+	}
+};
+

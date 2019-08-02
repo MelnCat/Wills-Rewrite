@@ -117,6 +117,10 @@ exports.models = {
 			allowNull: false,
 			primaryKey: true
 		},
+		hidden: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false,
+		}
 	}, {
 		freezeTableName: true,
 		tableName: "workerinfo",
