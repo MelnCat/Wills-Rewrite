@@ -62,7 +62,7 @@ exports.Matrix = class Matrix {
 		this.map = Array(rows)
 			.fill(0)
 			.map((x, i) => Array(columns)
-				.fill(typeof defaultValue === "function" ? defaultValue(i) : defaultValue));
+				.fill(0).map((y, j) => typeof defaultValue === "function" ? defaultValue(i * j) : defaultValue));
 	}
 	validate(row, column) {
 		return Boolean(this.map[row] && this.map[row][column]);
