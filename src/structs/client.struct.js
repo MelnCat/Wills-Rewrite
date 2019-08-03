@@ -9,7 +9,7 @@ const { inspect } = require("util");
 const { token } = require("../auth");
 const { basename, dirname, resolve } = require("path");
 const Command = require("./command.struct");
-
+const _ = require("lodash");
 module.exports = class DiscordDonuts extends Client {
 	constructor(shards = 2) {
 		super({ disableEveryone: true, shardCount: shards });
@@ -24,6 +24,7 @@ module.exports = class DiscordDonuts extends Client {
 		this.permissionFlags = this.constants.permissionFlags;
 		this.util = Util;
 		this.cached = {};
+		this._ = _;
 		this.MessageEmbed = MessageEmbed;
 		this.loadChannels();
 		this.loadRoles();

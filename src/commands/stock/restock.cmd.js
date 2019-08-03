@@ -22,7 +22,7 @@ React with a number to acquire the lowest ingredient of that column! Each ingred
 			const ingr = stocks.column(column);
 			if (!ingr.length) return;
 			const lastingr = ingr.pop();
-			await lastingr.update({ count: lastingr.count + 35 });
+			await lastingr.update({ count: Math.min(lastingr.max, lastingr.count + 35) });
 			await msg.edit(display.toString());
 			console.log(lastingr.name);
 		});

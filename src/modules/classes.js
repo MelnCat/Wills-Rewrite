@@ -90,6 +90,9 @@ exports.Matrix = class Matrix {
 		matrix.map = val;
 		return matrix;
 	}
+	popColumn(number) {
+		if (!this.validate(0, column)) throw TypeError(`Column ${number} does not exist.`);
+	}
 	toString() {
 		return this.map.map(x => x.join("")).join("\n");
 	}
