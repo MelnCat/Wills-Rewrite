@@ -4,6 +4,9 @@ const Command = require("../../structs/command.struct");
 module.exports = new Command("restock", "Restock an ingredient!", "", 2)
 	.setFunction(async(client, message, args, strings) => {
 		const ingredients = client.getModel("stocks");
+		await message.channel.send(`welcome to the temp jason is the big boi SCRUMPTIOUS 
+**Instructions**
+React with a number to acquire the lowest ingredient of that column! Each ingredient will add 35 of its type.`);
 		const msg = await message.channel.send(`Loading ingredient matrix...`);
 		const all = await ingredients.findAll();
 		const stocks = new client.classes.Matrix(6, 4, () => all.random());
@@ -14,9 +17,13 @@ module.exports = new Command("restock", "Restock an ingredient!", "", 2)
 		}
 		const reactCollector = msg.createReactionCollector((r, u) => u.id === message.author.id && r.emoji.guild && r.emoji.guild.id === client.staffGuild.id, { time: 90000 });
 		reactCollector.on("collect", async reaction => {
-			const column = [-1, "ddone", "ddtwo", "ddthree", "ddfour"].indexOf(reaction.emoji.name);
+			const column = ["ddone", "ddtwo", "ddthree", "ddfour"].indexOf(reaction.emoji.name);
 			if (column < 0) return message.channel.send("[no] Invalid Reaction.");
-			await message.channel.send(`temp${column}`);
+			const ingr = stocks.column(column);
+			if (!ingr.length) return;
+			const lastingr = ingr.pop();
+			await lastingr.update({ count: lastingr.count + 35 });
+			await msg.edit(display.toString());
 		});
 		reactCollector.on("end", async() => message.channel.send("Stopped restocking."));
 		const cancelCollector = msg.channel.createMessageCollector(m => m.author.id === message.author.id && m.content.toLowerCase() === "stop", { max: 1 });
