@@ -66,7 +66,7 @@ exports.Matrix = class Matrix {
 				.fill(0).map((y, j) => typeof defaultValue === "function" ? defaultValue(i * j) : defaultValue));
 	}
 	validate(row, column) {
-		return Boolean(this.map[row] && this.map[row][column]);
+		return row in this.map && column in this.map[row];
 	}
 	row(number) {
 		if (!this.validate(number, 0)) throw TypeError(`Row ${number} does not exist.`);
