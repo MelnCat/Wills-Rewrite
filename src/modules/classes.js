@@ -97,9 +97,9 @@ exports.Matrix = class Matrix {
 	popColumn(number) {
 		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
 		const rotated = this.rotate();
-		rotated[number].pop();
+		const returnval = rotated[number].pop();
 		this.map = rotated.rotate();
-		return this.rotated[number];
+		return returnval;
 	}
 	toString() {
 		return this.map.map(x => x.join("")).join("\n");

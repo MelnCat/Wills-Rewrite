@@ -21,7 +21,7 @@ React with a number to acquire the lowest ingredient of that column! Each ingred
 			if (column < 0) return message.channel.send("[no] Invalid Reaction.");
 			const ingr = stocks.column(column);
 			if (!ingr.length) return;
-			const lastingr = ingr.pop();
+			const lastingr = stocks.popColumn(column);
 			await lastingr.update({ count: Math.min(lastingr.max, lastingr.count + 35) });
 			await msg.edit(display.toString());
 			console.log(lastingr.name);
