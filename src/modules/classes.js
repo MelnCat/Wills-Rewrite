@@ -74,7 +74,7 @@ exports.Matrix = class Matrix {
 	}
 	column(number) {
 		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
-		return this.rotate()[number];
+		return this.rotate().row(number);
 	}
 	get(row, column) {
 		if (!this.validate(row, column)) throw TypeError(`Point (${row}, ${column}) does not exist.`);
