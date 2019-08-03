@@ -17,6 +17,7 @@ React with a number to acquire the lowest ingredient of that column! Each ingred
 		}
 		const reactCollector = msg.createReactionCollector((r, u) => u.id === message.author.id && r.emoji.guild && r.emoji.guild.id === client.staffGuild.id, { time: 90000 });
 		reactCollector.on("collect", async reaction => {
+			console.log(stocks.map);
 			const column = ["ddone", "ddtwo", "ddthree", "ddfour"].indexOf(reaction.emoji.name);
 			if (column < 0) return message.channel.send("[no] Invalid Reaction.");
 			const ingr = stocks.column(column);
