@@ -19,7 +19,7 @@ module.exports = new Command("restock", "Restock an ingredient!", "", 2)
 			await message.channel.send(`temp${column}`);
 		});
 		reactCollector.on("end", async() => message.channel.send("Stopped restocking."));
-		const cancelCollector = msg.createMessageCollector(m => m.author.id === message.author.id && m.content.toLowerCase() === "stop", { max: 1 });
+		const cancelCollector = msg.channel.createMessageCollector(m => m.author.id === message.author.id && m.content.toLowerCase() === "stop", { max: 1 });
 		cancelCollector.on("collect", async mess => {
 			await reactCollector.stop();
 			await cancelCollector.stop();
