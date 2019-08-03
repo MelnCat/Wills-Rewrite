@@ -1,3 +1,4 @@
+const _ = require("lodash");
 class GenericError extends Error {
 	constructor(...m) {
 		super(...m);
@@ -73,7 +74,7 @@ exports.Matrix = class Matrix {
 	}
 	column(number) {
 		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
-		return this.map.map(x => x[number]);
+		return this.rotate()[number];
 	}
 	get(row, column) {
 		if (!this.validate(row, column)) throw TypeError(`Point (${row}, ${column}) does not exist.`);
@@ -90,8 +91,15 @@ exports.Matrix = class Matrix {
 		matrix.map = val;
 		return matrix;
 	}
+	rotate() {
+		return Matrix.from(_.zip(...this.map));
+	}
 	popColumn(number) {
-		if (!this.validate(0, column)) throw TypeError(`Column ${number} does not exist.`);
+		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
+		const rotated = this.rotate();
+		rotated[number].pop();
+		this.map = rotated.rotate();
+		return this.rotated[number];
 	}
 	toString() {
 		return this.map.map(x => x.join("")).join("\n");
