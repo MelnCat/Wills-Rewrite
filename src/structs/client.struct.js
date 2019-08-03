@@ -241,6 +241,10 @@ module.exports = class DiscordDonuts extends Client {
 		return this.guilds.get(this.constants.mainServer);
 	}
 
+	get staffGuild() {
+		return this.guilds.get(this.constants.staffServer);
+	}
+
 	async getCommits() {
 		const v = await this.utils.execBash("git rev-list --no-merges --count HEAD");
 		if (isNaN(v)) return "???";
