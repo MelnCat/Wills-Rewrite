@@ -94,13 +94,6 @@ exports.Matrix = class Matrix {
 	rotate() {
 		return Matrix.from(_.zip(...this.map));
 	}
-	popColumn(number) {
-		if (!this.validate(0, number)) throw TypeError(`Column ${number} does not exist.`);
-		const rotated = this.rotate();
-		const returnval = rotated.row(number).pop();
-		this.map = rotated.rotate().map;
-		return returnval;
-	}
 	toString() {
 		return this.map.map(x => x.join("")).join("\n");
 	}
