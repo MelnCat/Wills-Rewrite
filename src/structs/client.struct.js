@@ -219,7 +219,7 @@ module.exports = class DiscordDonuts extends Client {
 
 	loadCommands() {
 		this.commands = new Collection();
-		const commandFiles = glob.sync(".src//commands/**/*.js").map(file => {
+		const commandFiles = glob.sync("./src/commands/**/*.js").map(file => {
 			delete require.cache[resolve(file)];
 			return [dirname(`.${file}`), require(`.${file}`)];
 		});
@@ -234,9 +234,9 @@ module.exports = class DiscordDonuts extends Client {
 			}
 			command.category = basename(path);
 			this.commands.set(command.name, command);
-			this.log(`${chalk.yellowBright(this.commands.size)} commands were loaded.`);
 			this.emit("commandLoad", command); // * LOADS EVENT onCommandLoad
 		}
+		this.log(`${chalk.yellowBright(this.commands.size)} commands were loaded.`);
 	}
 
 	get mainGuild() {
