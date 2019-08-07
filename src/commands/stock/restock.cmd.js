@@ -10,7 +10,7 @@ React with a number to acquire the lowest ingredient of that column! Each ingred
 		const msg = await message.channel.send(`Loading ingredient matrix...`);
 		const all = await ingredients.findAll();
 		const stocks = new client.classes.Matrix(4, 6, () => all.random());
-		const display = () => client.classes.Matrix.from(stocks.map.map(y => y.map(x => x ? x.emoji : "[empty]")));
+		const display = () => client.classes.Matrix.from(stocks.map.map(y => Object.assign(new Array(4).fill("[empty]"), y.map(x => x ? x.emoji : "[empty]"))));
 		await msg.edit(display().rotate().toString());
 		for (const emoji of ["one", "two", "three", "four"]) {
 			await msg.react(client.mainEmojis[emoji]);
