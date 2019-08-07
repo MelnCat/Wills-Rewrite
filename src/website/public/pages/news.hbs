@@ -3,7 +3,7 @@
 
 <head>
 	<title>The Daily Donut</title>
-	<script src="http://discorddonuts.xyz/site/pages/news.js"></script>
+	<script src="http://discorddonuts.xyz/pages/news.js"></script>
 	{{> header}}
 </head>
 
@@ -13,7 +13,7 @@
 	<p>Read ALL Issues of The Daily Donut here!</p>
 	{{#each files}}
 		<h3>Issue {{this.[1]}}</h3>
-		<iframe src="http://discorddonuts.xyz/site/news/{{this.[0]}}">Your browser does not support iframes.</iframe>
+		<iframe src="http://discorddonuts.xyz/news/{{this.[0]}}">Your browser does not support iframes.</iframe>
 	{{/each}}
 </body>
 

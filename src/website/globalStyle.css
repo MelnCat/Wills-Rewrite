@@ -40,7 +40,7 @@ ul#nav li a.active {
 }
 
 ul#nav li a::before {
-	content: url("http://discorddonuts.xyz/site/images/hash.svg");
+	content: url("http://discorddonuts.xyz/images/hash.svg");
 	display: block;
 	width: 20px;
 	height: 20px;
@@ -83,9 +83,9 @@ iframe {
 }
 @font-face {
 	font-family: "Whitney";
-	src: url("http://discorddonuts.xyz/site/fonts/Whitney.ttf");
+	src: url("http://discorddonuts.xyz/fonts/Whitney.ttf");
 }
 @font-face {
 	font-family: "Discord";
-	src: url("http://discorddonuts.xyz/site/fonts/Discord.ttf");
+	src: url("http://discorddonuts.xyz/fonts/Discord.ttf");
 }
