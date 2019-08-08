@@ -24,7 +24,8 @@ React with a number to acquire the lowest ingredient of that column! Each ingred
 			const lastingr = ingr.pop();
 			await lastingr.update({ count: Math.min(lastingr.max, lastingr.count + 35) });
 			await msg.edit(display().rotate().toString());
-			console.log(lastingr.name);
+			console.log(ingr);
+			console.log(display().row(column));
 		});
 		reactCollector.on("end", async() => message.channel.send("Stopped restocking."));
 		const cancelCollector = msg.channel.createMessageCollector(m => m.author.id === message.author.id && m.content.toLowerCase() === "stop", { max: 1 });
