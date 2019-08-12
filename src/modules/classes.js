@@ -98,4 +98,3 @@ exports.Matrix = class Matrix {
 		return this.map.map(x => x.join("")).join("\n");
 	}
 };
-
