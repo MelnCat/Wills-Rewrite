@@ -30,17 +30,22 @@
     "hbs": "^4.0.4",
     "jquery": "^3.4.1",
     "json5": "^2.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment-timezone": "^0.5.23",
     "multipurpose-utils": "^1.0.4",
     "mysql2": "^1.6.4",
     "npm-api": "^0.4.12",
     "owofy": "^0.3.0",
     "parse-duration": "^0.1.1",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
     "pretty-bytes": "^5.1.0",
     "pretty-ms": "^4.0.0",
     "r2": "^2.0.1",
     "sequelize": "^5.8.12",
     "string-similarity": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-jsdoc": "^15.8.0"
   }
 }

@@ -242,4 +242,4 @@ process.on("unhandledRejection", (err, p) => {
 	client.error(err.stack);
 });
 
-client.login(client.auth.token);
+client.login(`Bot ${client.auth.token}`);
