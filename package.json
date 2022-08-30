@@ -31,7 +31,7 @@
     "jquery": "^3.4.1",
     "json5": "^2.1.0",
     "lodash": "^4.17.15",
-    "moment-timezone": "^0.5.23",
+    "moment-timezone": "^0.5.35",
     "multipurpose-utils": "^1.0.4",
     "mysql2": "^1.6.4",
     "npm-api": "^0.4.12",
